@@ -1,0 +1,31 @@
+#! /bin/bash
+
+set -e # exit if any commands returns a non-zero exit code.
+
+command -v sed >/dev/null 2>&1 || { echo >&2 "sed is not installed.  Aborting."; exit 1; }
+
+cd "$(dirname "$0")/.."
+
+## Build frontend assets
+echo 'Building assets...'
+yarn build
+echo 'Frontend assets has been built !'
+
+## Build binary
+echo 'Creating a tarball'
+commit=$(git rev-parse HEAD)
+rm -rf $commit && mkdir $commit
+
+cp -r \
+    .next \
+    node_modules \
+    public \
+    .env \
+    next.config.js \
+    package.json \
+    yarn.lock \
+    $commit
+
+tar -czf $commit.tar.gz -C $commit . && rm -rf $commit
+
+echo 'Deployment artifact has been built successfully !'
