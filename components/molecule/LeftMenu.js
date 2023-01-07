@@ -9,18 +9,19 @@ import {
     Descriptions,
     Switch,
 } from "antd";
+import { useRouter } from "next/router";
 
-export default function LeftMenu(detail) {
-    console.log("🚀 ~ file: LeftMenu.js:14 ~ LeftMenu ~ course", detail.detail);
+export default function LeftMenu({ detail, id }) {
+    const router = useRouter();
     return (
         <div className="w-80 border-r shrink-0 border-trueGray-700 pb-8 pt-8">
             <Space direction="vertical" size={30}>
-                {detail.detail?.course?.courseChapter?.map((item, index) => (
+                {detail?.course?.courseChapter?.map((item, index) => (
                     <div key={index}>
                         <h3>{item}</h3>
 
                         <Space direction="vertical" size={4} className="pt-4">
-                            {detail.detail.subCourses.rows
+                            {detail?.subCourses?.rows
                                 .filter((course) => course.chapter === item)
                                 .map((child) => (
                                     <a

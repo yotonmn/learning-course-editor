@@ -12,7 +12,12 @@ import {
     Option,
 } from "antd";
 import { useRouter } from "next/router";
-import { useCourseById, createChapter, createSubCourse } from "@lib/service";
+import {
+    useCourseById,
+    createChapter,
+    createSubCourse,
+    updateCourse,
+} from "@lib/service";
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import CourseGroup from "@components/modal/courseGroup";
@@ -49,15 +54,16 @@ export default function Detail() {
     const router = useRouter();
     const id = +router.query.id;
     const [editMode, setEditMode] = useState(false);
-    const [title, setTitle] = useState("");
-    const [desc, setDesc] = useState("");
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalOpenGroup, setIsModalOpenGroup] = useState(false);
     //todo hereggui state
     const [selectedOption, setSelectedOption] = useState();
 
     const { data: course, loading: courseLoading } = useCourseById(id);
-    console.log("🚀 ~ file: [id].js:55 ~ Detail ~ course", course);
+    const [title, setTitle] = useState(course?.course?.courseName);
+    const [desc, setDesc] = useState(course?.course?.courseDescription);
+
     const [form] = Form.useForm();
 
     const handleChange = (event) => {
@@ -95,30 +101,26 @@ export default function Detail() {
             // setLoading(false);
         }
     };
-    const onFinishGroup = async (values) => {
-        console.log(values);
-        // var object = {
-        //     chapterName: values.title,
-        // };
 
-        const { data, status } = await createChapter(id, values);
-
-        console.log("🚀 ~ file: [id].js:73 ~ onFinishGroup ~ status", status);
-        console.log("🚀 ~ file: [id].js:73 ~ onFinishGroup ~ data", data);
+    const save = async () => {
+        var object = {
+            courseName: title,
+            courseDescription: desc,
+        };
+        const { data, status } = await updateCourse(id, object);
         if (status === 200) {
-            openNotificationWithIcon(
-                "success",
-                "Successfully created chapter!"
-            );
-            form.resetFields();
+            openNotificationWithIcon("success", "Successfully updated course!");
+
+            setEditMode(false);
         } else {
             openNotificationWithIcon(
                 "error",
-                data?.message || "Failed to create course!"
+                data?.message || "Failed to update course!"
             );
             // setLoading(false);
         }
     };
+
     const addContent = (value) => {
         console.log(
             "🚀 ~ file: createCourse.js:79 ~ addContent ~ value",
@@ -143,7 +145,7 @@ export default function Detail() {
                 <div className="h-full border-t border-trueGray-700 ">
                     <div className="h-full container mx-auto flex px-2">
                         {/* {course?.course?.courseName} */}
-                        <LeftMenu detail={course} />
+                        <LeftMenu detail={course} id={id} />
                         <div className="w-full p-8">
                             <Breadcrumb
                                 courseName={course?.course?.courseName}
@@ -173,6 +175,7 @@ export default function Detail() {
                                         theme="snow"
                                         className="hs-editor mt-3"
                                         value={
+                                            desc ||
                                             course?.course?.courseDescription
                                         }
                                         onChange={addContent}
@@ -209,21 +212,41 @@ export default function Detail() {
                         </div>
                         <div className="flex w-full justify-end">
                             {editMode ? (
-                                <Button
-                                    type="primary"
-                                    className="hs-btn hs-btn-primary my-auto "
-                                    onClick={() => setEditMode(false)}
-                                >
-                                    Done
-                                </Button>
+                                <Space>
+                                    <Button
+                                        type="primary"
+                                        className="hs-btn hs-btn-primary my-auto "
+                                        onClick={() => save()}
+                                    >
+                                        Save
+                                    </Button>
+                                    <Button
+                                        type="default"
+                                        className="hs-btn hs-btn-default my-auto "
+                                        onClick={() => setEditMode(false)}
+                                    >
+                                        Cancel
+                                    </Button>
+                                </Space>
                             ) : (
-                                <Button
-                                    type="primary"
-                                    className="hs-btn hs-btn-primary my-auto "
-                                    onClick={() => setEditMode(true)}
-                                >
-                                    Edit
-                                </Button>
+                                <Space className="justify-between">
+                                    <Button
+                                        type="primary"
+                                        className="hs-btn hs-btn-primary my-auto "
+                                        onClick={() => setEditMode(true)}
+                                    >
+                                        Edit{" "}
+                                    </Button>
+                                    <Button
+                                        type="default"
+                                        className="hs-btn hs-btn-text my-auto "
+                                        onClick={() => {
+                                            setDeleteModalOpen(true);
+                                        }}
+                                    >
+                                        Delete this sub-lesson
+                                    </Button>
+                                </Space>
                             )}
                         </div>
                     </div>
