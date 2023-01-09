@@ -173,7 +173,7 @@ export default function Detail() {
                                     <QuillNoSSRWrapper
                                         modules={modules}
                                         theme="snow"
-                                        className="hs-editor mt-3"
+                                        className="hs-editor mt-3 pb-36"
                                         value={
                                             desc ||
                                             course?.course?.courseDescription
@@ -187,7 +187,7 @@ export default function Detail() {
                         </div>
                     </div>
                 </div>
-                <div className=" border-t border-trueGray-700 bottom-0 fixed w-full h-16 flex ">
+                <div className="bg-trueGray-900  border-t border-trueGray-700 bottom-0 fixed w-full h-16 flex ">
                     <div className="container mx-auto flex  px-2">
                         <div className="justify-start flex">
                             <div className="flex w-80 border-r border-trueGray-700">
