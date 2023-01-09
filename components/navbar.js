@@ -30,10 +30,10 @@ export default function Navbar() {
 
     const handleSignOut = async (evt) => {
         await signOut();
-        router.push("/login");
+        router.push("/");
     };
     const pushToLogin = () => {
-        router.push("/login");
+        router.push("/");
     };
 
     const mobileMenu = [
@@ -63,7 +63,7 @@ export default function Navbar() {
         },
 
         !user && {
-            key: "/login",
+            key: "/",
             label: (
                 <Link href="/login" className="flex items-center">
                     {t("login")}
