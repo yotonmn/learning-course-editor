@@ -137,7 +137,7 @@ export default function Detail() {
                                 courseName={course?.course?.courseName}
                             />
 
-                            <div>
+                            <div className=" pb-36">
                                 {editMode ? (
                                     <input
                                         className="hs-input"
