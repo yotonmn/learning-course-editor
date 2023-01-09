@@ -19,6 +19,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { signInManual } from "@lib/auth";
 import { SessionContext } from "@lib/context";
 import { useRouter } from "next/router";
+import { signInManualAdmin } from "@lib/auth";
 const { Title, Paragraph } = Typography;
 
 const GOOGLE_CLIENT_ID =

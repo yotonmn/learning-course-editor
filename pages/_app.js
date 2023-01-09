@@ -30,7 +30,7 @@ export default function App({ Component, pageProps }) {
     };
     function authCheck(url) {
         const publicPaths = [
-            "/",
+            // "/",
             "/#",
             "/login",
             "/register",
