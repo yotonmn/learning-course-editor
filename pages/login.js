@@ -45,13 +45,14 @@ export default function Login() {
 
     const onFinish = async (values) => {
         setLoading(true);
-        const data = await signInManual(values);
+        const data = await signInManualAdmin(values);
+        //data buruu uchir sign in hj chadku
 
-        if (!data?.success && !data?.jwToken) {
-            const errorTxt = await data.json();
-
+        if (!data?.success) {
+            // const errorTxt = await data.json();
+            console.log("error");
             setLoading(false);
-            openNotificationWithIcon("error", errorTxt);
+            openNotificationWithIcon("error", "error");
         } else {
             openNotificationWithIcon("success", t("welcome"));
             await signIn(data);
@@ -67,9 +68,7 @@ export default function Login() {
             <div className="flex flex-col max-w-md p-6 rounded-md sm:p-10  dark:text-gray-100 h-full mt-[-50px] mx-auto">
                 <div className="align-middle  my-auto ">
                     <div className="mb-8 text-center">
-                        <h2 className="my-3 text-4xl font-bold">
-                            Welcome back
-                        </h2>
+                        <h2 className="my-3 text-4xl font-bold">Admin login</h2>
                         <p className="text-sm dark:text-gray-400">
                             Sign in to access your account
                         </p>
@@ -146,7 +145,7 @@ export default function Login() {
                                         {t("login")}
                                     </Button>
                                 </Form.Item>
-                                <Form.Item className="hs-form-item">
+                                {/* <Form.Item className="hs-form-item">
                                     <Divider className="capitalize">or</Divider>
                                 </Form.Item>
                                 <Form.Item className="hs-form-item">
@@ -159,12 +158,12 @@ export default function Login() {
                                     >
                                         <GoogleButton />
                                     </GoogleOAuthProvider>
-                                </Form.Item>
+                                </Form.Item> */}
                                 <Form.Item className="hs-form-item hs-form-item-other">
                                     <Paragraph className="paragraph2">
                                         {t("newUser")}?
                                     </Paragraph>
-                                    <Link href="/register">
+                                    <Link href="/adminRegister">
                                         <Button
                                             className="hs-btn hs-btn-text"
                                             type="text"

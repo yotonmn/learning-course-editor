@@ -46,7 +46,7 @@ export default function Navbar() {
             ),
         },
         {
-            key: "/liveSessions",
+            key: "/createCourse",
             label: (
                 <Link href="/createCourse" className="flex items-center">
                     Create course
@@ -73,18 +73,18 @@ export default function Navbar() {
     ];
 
     const profileMenu = [
+        // {
+        //     key: "/profile",
+        //     // icon: <UserCircle />,
+        //     label: <Link href="/profile">{t("Profile")}</Link>,
+        // },
+        // {
+        //     key: "/profile/wallet",
+        //     // icon: <Wallet />,
+        //     label: <Link href="/editProfile">Edit profile</Link>,
+        // },
         {
-            key: "/profile",
-            // icon: <UserCircle />,
-            label: <Link href="/profile">{t("Profile")}</Link>,
-        },
-        {
-            key: "/profile/wallet",
-            // icon: <Wallet />,
-            label: <Link href="/editProfile">Edit profile</Link>,
-        },
-        {
-            key: "/liveSessions",
+            key: "/createCourse",
             label: (
                 <Link href="/createCourse" className="flex items-center">
                     Create course
