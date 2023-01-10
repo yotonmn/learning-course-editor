@@ -12,6 +12,7 @@ import {
 import { useRouter } from "next/router";
 
 export default function LeftMenu({ detail, id }) {
+    console.log("🚀 ~ file: LeftMenu.js:15 ~ LeftMenu ~ detail", detail);
     const router = useRouter();
     return (
         <div className="w-80 border-r shrink-0 border-trueGray-700 pb-8 pt-8">
@@ -28,14 +29,17 @@ export default function LeftMenu({ detail, id }) {
                 >
                     <h3>Overview</h3>
                 </a>
-                {detail?.course?.courseChapter?.map((item, index) => (
-                    <div key={index}>
-                        <h3>{item}</h3>
+                {detail &&
+                    Object.keys(detail).map((chapter) => (
+                        <div key={chapter}>
+                            <h3>{chapter}</h3>
 
-                        <Space direction="vertical" size={4} className="pt-4">
-                            {detail?.subCourses?.rows
-                                .filter((course) => course.chapter === item)
-                                .map((child) => (
+                            <Space
+                                direction="vertical"
+                                size={4}
+                                className="pt-4"
+                            >
+                                {detail[chapter].map((child) => (
                                     <a
                                         key={child.id}
                                         onClick={() => {
@@ -68,9 +72,9 @@ export default function LeftMenu({ detail, id }) {
                                         </Space>
                                     </a>
                                 ))}
-                        </Space>
-                    </div>
-                ))}
+                            </Space>
+                        </div>
+                    ))}
             </Space>
         </div>
     );

@@ -134,7 +134,7 @@ export default function Detail() {
                 <div className="h-full border-t border-trueGray-700 ">
                     <div className="h-full container mx-auto flex px-2">
                         {/* {course?.course?.courseName} */}
-                        <LeftMenu detail={course} id={id} />
+                        <LeftMenu detail={course?.subCourses} id={id} />
                         <div className="w-full p-8 max-h-screen overflow-y-auto">
                             <Breadcrumb
                                 courseName={course?.course?.courseName}
