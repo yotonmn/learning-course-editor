@@ -10,7 +10,10 @@ import {
     notification,
     Select,
     Option,
+    message,
+    Upload,
 } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import {
     useCourseById,
@@ -18,37 +21,44 @@ import {
     createSubCourse,
     updateCourse,
 } from "@lib/service";
-import { useState } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
+import { getAccessToken, getRefreshToken, saveToken } from "@lib/auth";
 import dynamic from "next/dynamic";
 import CourseGroup from "@components/modal/courseGroup";
 import NewCourse from "@components/modal/newCourse";
 import Breadcrumb from "@components/molecule/breadcrumb";
 import LeftMenu from "@components/molecule/LeftMenu";
+import SERVER_SETTINGS from "@lib/serverSettings";
+import { Editor } from "@tinymce/tinymce-react";
 
 const QuillNoSSRWrapper = dynamic(import("react-quill"), {
     ssr: false,
     loading: () => <p>Loading ...</p>,
 });
 
-const modules = {
-    toolbar: [
-        [{ header: "1" }, { header: "2" }, { font: [] }],
-        [{ size: [] }],
-        ["bold", "italic", "underline", "strike", "blockquote"],
-        [
-            { list: "ordered" },
-            { list: "bullet" },
-            { indent: "-1" },
-            { indent: "+1" },
-        ],
-        ["link", "image", "video", "code-block"],
-        ["clean"],
-    ],
-    clipboard: {
-        // toggle to add extra line breaks when pasting HTML:
-        matchVisual: false,
-    },
-};
+// const modules = {
+//     toolbar: [
+//         [{ header: "1" }, { header: "2" }, { font: [] }],
+//         [{ size: [] }],
+//         ["bold", "italic", "underline", "strike", "blockquote"],
+//         [
+//             { list: "ordered" },
+//             { list: "bullet" },
+//             { indent: "-1" },
+//             { indent: "+1" },
+//         ],
+//         ["link", "image", "video", "code-block"],
+//         ["clean"],
+//     ],
+
+//     clipboard: {
+//         // toggle to add extra line breaks when pasting HTML:
+//         matchVisual: false,
+//     },
+//     handlers: {
+//         image: imageHandler,
+//     },
+// };
 
 export default function Detail() {
     const router = useRouter();
@@ -57,6 +67,7 @@ export default function Detail() {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalOpenGroup, setIsModalOpenGroup] = useState(false);
+    const [headerImage, setHeaderImage] = useState([]);
     //todo hereggui state
     const [selectedOption, setSelectedOption] = useState();
 
@@ -105,7 +116,7 @@ export default function Detail() {
     const save = async () => {
         var object = {
             courseName: title,
-            courseDescription: desc,
+            courseDescription: editorRef.current.getContent(),
         };
         const { data, status } = await updateCourse(id, object);
         if (status === 200) {
@@ -134,6 +145,118 @@ export default function Detail() {
     };
     const showModalGroup = () => {
         setIsModalOpenGroup(true);
+    };
+
+    const quillRef = useRef(null);
+    // useEffect(() => {
+    //     if (quillRef.current) {
+    //         const quill = quillRef.current;
+    //         console.log("🚀 ~ file: index.js:147 ~ useEffect ~ quill", quill);
+    //         // Use the Quill editor instance
+    //         imageHandler(quill);
+    //     }
+    // }, []);
+
+    const imageHandler = (a) => {
+        const input = document.createElement("input");
+        input.setAttribute("type", "file");
+        input.setAttribute("accept", "image/*");
+        input.click();
+
+        input.onchange = () => {
+            const file = input.files[0];
+
+            // file type is only image.
+            if (/^image\//.test(file.type)) {
+                saveToServer(file);
+            } else {
+                console.warn("You could only upload images.");
+            }
+        };
+    };
+    function saveToServer(file) {
+        const fd = new FormData();
+        fd.append("upload", file);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/api/media", true);
+        xhr.onload = () => {
+            if (xhr.status === 201) {
+                // this is callback data: url
+                const url = JSON.parse(xhr.responseText).url;
+                insertToEditor(url);
+            }
+        };
+        xhr.send(fd);
+    }
+
+    function insertToEditor(url) {
+        editorRef.current.getEditor().insertEmbed(null, "image", url);
+    }
+
+    const onChange = ({ fileList: newFileList }) => {
+        setHeaderImage(newFileList);
+        var axios = require("axios");
+        var FormData = require("form-data");
+        if (newFileList?.length === 0) {
+            openNotificationWithIcon("error", "Header image оруулна уу?");
+        }
+        if (newFileList?.length === 0) {
+            return null;
+        }
+        var data = new FormData();
+        data.append(
+            "idFront",
+            newFileList[0]?.originFileObj,
+            newFileList[0]?.originFileObj?.name
+        );
+        var config = {
+            method: "POST",
+            url: `${SERVER_SETTINGS.baseURL}/api/userVerification`,
+            headers: {},
+            data: data,
+        };
+        const token = getAccessToken();
+        if (token) {
+            config.headers["Authorization"] = "Bearer " + token;
+        }
+        axios(config)
+            .then(async (response) => {
+                if (response.status === 201) {
+                    setSubmitLoading(false);
+                    openNotificationWithIcon(
+                        "success",
+                        "Амжилттай зураг upload хийлээ!"
+                    );
+                }
+            })
+            .catch((error) => {
+                const originalRequest = error.config;
+                openNotificationWithIcon("error", "Амжилтгүй!");
+                if (error.response?.status === 401 && !originalRequest._retry) {
+                    originalRequest._retry = true;
+
+                    return axios
+                        .post(
+                            `${SERVER_SETTINGS.baseURL}/api/refresh-access-token`,
+                            {
+                                refreshToken: getRefreshToken(),
+                            }
+                        )
+                        .then((res) => {
+                            if (res.status === 200) {
+                                saveToken(res.data);
+                            }
+                        });
+                }
+            });
+    };
+
+    const editorRef = useRef(null);
+    const log = () => {
+        if (editorRef.current) {
+            console.log(editorRef.current.getContent());
+        }
     };
 
     return (
@@ -168,21 +291,93 @@ export default function Detail() {
                                     </h2>
                                 )}
                             </div>
-                            <div>
+                            <Upload
+                                listType="picture"
+                                fileList={headerImage}
+                                onChange={onChange}
+                                maxCount={1}
+                                className="hs-upload-image"
+                            >
+                                <Button
+                                    icon={<UploadOutlined />}
+                                    type="primary"
+                                    className="hs-btn-s hs-btn-primary mb-3"
+                                    listType="picture-card"
+                                >
+                                    Upload Header image
+                                </Button>
+                            </Upload>
+                            <div className="mt-3">
                                 {editMode ? (
-                                    <QuillNoSSRWrapper
-                                        modules={modules}
-                                        theme="snow"
-                                        className="hs-editor mt-3 pb-36"
-                                        value={
-                                            desc ||
-                                            course?.course?.courseDescription
+                                    <Editor
+                                        apiKey="6txtqjyoakt14laf9nspotnfhh3a39axurq82x8ego0yq4h1"
+                                        onInit={(evt, editor) =>
+                                            (editorRef.current = editor)
                                         }
-                                        onChange={addContent}
+                                        initialValue="<p>This is the initial content of the editor.</p>"
+                                        init={{
+                                            height: 500,
+                                            menubar: false,
+                                            plugins: [
+                                                "advlist",
+                                                "autolink",
+                                                "lists",
+                                                "link",
+                                                "image",
+                                                "charmap",
+                                                "preview",
+                                                "anchor",
+                                                "searchreplace",
+                                                "visualblocks",
+                                                "code",
+                                                "fullscreen",
+                                                "insertdatetime",
+                                                "media",
+                                                "table",
+                                                "code",
+                                                "help",
+                                                "wordcount",
+                                                "codesample",
+                                                "code",
+                                            ],
+                                            codesample_languages: [
+                                                {
+                                                    text: "HTML/XML",
+                                                    value: "markup",
+                                                },
+                                                {
+                                                    text: "JavaScript",
+                                                    value: "javascript",
+                                                },
+                                                { text: "CSS", value: "css" },
+                                                { text: "PHP", value: "php" },
+                                                { text: "Ruby", value: "ruby" },
+                                                {
+                                                    text: "Python",
+                                                    value: "python",
+                                                },
+                                                { text: "Java", value: "java" },
+                                                { text: "C", value: "c" },
+                                                { text: "C#", value: "csharp" },
+                                                { text: "C++", value: "cpp" },
+                                            ],
+                                            toolbar:
+                                                "undo redo | blocks | " +
+                                                "bold italic forecolor | alignleft aligncenter " +
+                                                "alignright alignjustify | bullist numlist outdent indent | " +
+                                                "removeformat | help |" +
+                                                "codesample " +
+                                                "image",
+                                            content_style:
+                                                "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+                                        }}
                                     />
                                 ) : (
                                     <p>{course?.course?.courseDescription}</p>
                                 )}
+                                <button onClick={log}>
+                                    Log editor content
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -368,15 +563,3 @@ export default function Detail() {
         </div>
     );
 }
-
-// import fsPromises from "fs/promises";
-// import path from "path";
-// export async function getStaticProps() {
-//     const filePath = path.join(process.cwd(), "lessons.json");
-//     const jsonData = await fsPromises.readFile(filePath);
-//     const objectData = JSON.parse(jsonData);
-
-//     return {
-//         props: objectData,
-//     };
-// }

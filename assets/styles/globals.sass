@@ -328,8 +328,28 @@ a.hs-btn
     color: $gray-1
     // background: transparent
 
-.ant-affix .hs-header
-  background: rgba(0, 0, 0, 0.55)
+/* tile uploaded pictures */
+.hs-upload-image
+  .ant-upload-wrapper
+    background-color: $white
+  .upload-list-inline .ant-upload-list-item
+    float: left
+    width: 200px
+    margin-inline-end: 8px
+
+  .ant-upload-rtl.upload-list-inline .ant-upload-list-item
+    float: right
+  .ant-upload-list-item-name
+    color: $white
+  .ant-affix .hs-header
+    background: rgba(0, 0, 0, 0.55)
+  .anticon-delete
+    color: #c21433 !important
+  .ant-upload-list-item-actions
+    color: $white
+
+  .picture
+    color: $white
 // Header
 .hs-header
   background: transparent
