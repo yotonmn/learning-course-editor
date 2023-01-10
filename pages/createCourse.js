@@ -1,7 +1,7 @@
 import React from "react";
 import Navbar from "@components/navbar";
 import Footer from "@components/footer";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import dynamic from "next/dynamic";
 import {
     Button,
@@ -20,59 +20,23 @@ import {
     getCoursesByCategory,
 } from "@lib/service";
 import { useRouter } from "next/router";
-
-const QuillNoSSRWrapper = dynamic(import("react-quill"), {
-    ssr: false,
-    loading: () => <p>Loading ...</p>,
-});
-
-// const modules= {
-//     toolbar: [
-//       [{ header: [1, 2, false] }],
-//       ['bold', 'italic', 'underline'],
-//       ['image', 'code-block']
-//     ]
-//   },
-
-const modules = {
-    toolbar: [
-        [{ header: "1" }, { header: "2" }, { font: [] }],
-        [{ size: [] }],
-        ["bold", "italic", "underline", "strike", "blockquote"],
-        [
-            { list: "ordered" },
-            { list: "bullet" },
-            { indent: "-1" },
-            { indent: "+1" },
-        ],
-        ["link", "image", "video", "code-block"],
-        ["clean"],
-    ],
-    clipboard: {
-        // toggle to add extra line breaks when pasting HTML:
-        matchVisual: false,
-    },
-    syntax: {
-        highlight: (text) => hljs.highlightAuto(text).value,
-    },
-};
+import { Editor } from "@tinymce/tinymce-react";
 
 export default function CreateCourse() {
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isModalOpenGroup, setIsModalOpenGroup] = useState(false);
-    const [subLessons, setSubLessons] = useState([]);
-    const { data: courses } = useCoursesByCategory();
+    const [subDesc, setSubDesc] = useState("");
+    const [headerImageUrl, setHeaderImageUrl] = useState("");
 
     const router = useRouter();
-
-    const [form] = Form.useForm();
+    const editorRef = useRef(null);
 
     const save = async () => {
         var jsonData = {
             courseName: title,
-            courseDescription: desc,
+            courseDescription: editorRef.current.getContent(),
+            courseImageUrl: headerImageUrl,
+            courseSubDescription: subDesc,
             categoryId: 1,
         };
 
@@ -110,21 +74,6 @@ export default function CreateCourse() {
             description: data,
         });
     };
-    const handleOk = () => {
-        setIsModalOpen(false);
-    };
-    const handleCancel = () => {
-        setIsModalOpen(false);
-    };
-    const showModalGroup = () => {
-        setIsModalOpenGroup(true);
-    };
-    const handleOkGroup = () => {
-        setIsModalOpenGroup(false);
-    };
-    const handleCancelGroup = () => {
-        setIsModalOpenGroup(false);
-    };
 
     const addContent = (value) => {
         setDesc(value);
@@ -149,26 +98,95 @@ export default function CreateCourse() {
                                 <Link href="/createCourse">
                                     <h5 className="pt-3">Overview</h5>
                                 </Link>
-                                {subLessons.map((course) => (
-                                    <p className="pt-1" key={course.title}>
-                                        {course.title}
-                                    </p>
-                                ))}
                             </div>
                             <div className="w-full p-8">
                                 <input
-                                    className="hs-input"
+                                    className="hs-input w-full"
                                     type="text"
                                     placeholder="Гарчиг"
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
                                 />
-                                <QuillNoSSRWrapper
-                                    modules={modules}
-                                    theme="snow"
-                                    className="hs-editor mt-3"
-                                    value={desc}
-                                    onChange={addContent}
+                                <input
+                                    className="hs-input mt-3 w-full"
+                                    type="text"
+                                    placeholder="Header image URL"
+                                    value={headerImageUrl}
+                                    onChange={(e) =>
+                                        setHeaderImageUrl(e.target.value)
+                                    }
+                                />
+                                <input
+                                    className="hs-input my-3 w-full"
+                                    type="text"
+                                    placeholder="Богино тайлбар"
+                                    value={subDesc}
+                                    onChange={(e) => setSubDesc(e.target.value)}
+                                />
+
+                                <Editor
+                                    className="mt-3"
+                                    apiKey="6txtqjyoakt14laf9nspotnfhh3a39axurq82x8ego0yq4h1"
+                                    onInit={(evt, editor) =>
+                                        (editorRef.current = editor)
+                                    }
+                                    // initialValue="<p>This is the initial content of the editor.</p>"
+                                    init={{
+                                        height: 500,
+                                        menubar: false,
+                                        plugins: [
+                                            "advlist",
+                                            "autolink",
+                                            "lists",
+                                            "link",
+                                            "image",
+                                            "charmap",
+                                            "preview",
+                                            "anchor",
+                                            "searchreplace",
+                                            "visualblocks",
+                                            "code",
+                                            "fullscreen",
+                                            "insertdatetime",
+                                            "media",
+                                            "table",
+                                            "code",
+                                            "help",
+                                            "wordcount",
+                                            "codesample",
+                                            "code",
+                                        ],
+                                        codesample_languages: [
+                                            {
+                                                text: "HTML/XML",
+                                                value: "markup",
+                                            },
+                                            {
+                                                text: "JavaScript",
+                                                value: "javascript",
+                                            },
+                                            { text: "CSS", value: "css" },
+                                            { text: "PHP", value: "php" },
+                                            { text: "Ruby", value: "ruby" },
+                                            {
+                                                text: "Python",
+                                                value: "python",
+                                            },
+                                            { text: "Java", value: "java" },
+                                            { text: "C", value: "c" },
+                                            { text: "C#", value: "csharp" },
+                                            { text: "C++", value: "cpp" },
+                                        ],
+                                        toolbar:
+                                            "undo redo | blocks | " +
+                                            "bold italic forecolor | alignleft aligncenter " +
+                                            "alignright alignjustify | bullist numlist outdent indent | " +
+                                            "removeformat | help |" +
+                                            "codesample " +
+                                            "image",
+                                        content_style:
+                                            "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+                                    }}
                                 />
                             </div>
                         </div>
@@ -179,20 +197,6 @@ export default function CreateCourse() {
                                 <div className="flex w-80 border-r border-trueGray-700">
                                     <div className="my-auto flex space-x-4">
                                         {" "}
-                                        {/* <Button
-                                            type="primary"
-                                            className="hs-btn hs-btn-primary  "
-                                            onClick={showModal}
-                                        >
-                                            Add sub-lesson
-                                        </Button>
-                                        <Button
-                                            type="default"
-                                            className="hs-btn hs-btn-default "
-                                            onClick={showModalGroup}
-                                        >
-                                            Add group
-                                        </Button> */}
                                     </div>
                                 </div>
                             </div>

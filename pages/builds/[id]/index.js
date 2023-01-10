@@ -77,6 +77,7 @@ export default function Detail() {
     const [desc, setDesc] = useState(course?.course?.courseDescription);
 
     const [form] = Form.useForm();
+    const editorRef = useRef(null);
 
     const handleChange = (event) => {
         setSelectedOption(event.target.value);
@@ -271,7 +272,6 @@ export default function Detail() {
             });
     };
 
-    const editorRef = useRef(null);
     const log = () => {
         if (editorRef.current) {
             console.log(editorRef.current.getContent());
@@ -310,7 +310,7 @@ export default function Detail() {
                                     </h2>
                                 )}
                             </div>
-                            <Upload
+                            {/* <Upload
                                 listType="picture"
                                 fileList={headerImage}
                                 onChange={onChange}
@@ -325,7 +325,7 @@ export default function Detail() {
                                 >
                                     Upload Header image
                                 </Button>
-                            </Upload>
+                            </Upload> */}
                             <div className="mt-3">
                                 {editMode ? (
                                     <Editor
@@ -333,7 +333,10 @@ export default function Detail() {
                                         onInit={(evt, editor) =>
                                             (editorRef.current = editor)
                                         }
-                                        initialValue="<p>This is the initial content of the editor.</p>"
+                                        initialValue={
+                                            desc ||
+                                            course?.course?.courseDescription
+                                        }
                                         init={{
                                             height: 500,
                                             menubar: false,

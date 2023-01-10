@@ -16,6 +16,18 @@ export default function LeftMenu({ detail, id }) {
     return (
         <div className="w-80 border-r shrink-0 border-trueGray-700 pb-8 pt-8">
             <Space direction="vertical" size={30}>
+                <a
+                    onClick={() => {
+                        router.push({
+                            pathname: "/builds/[id]",
+                            query: {
+                                id,
+                            },
+                        });
+                    }}
+                >
+                    <h3>Overview</h3>
+                </a>
                 {detail?.course?.courseChapter?.map((item, index) => (
                     <div key={index}>
                         <h3>{item}</h3>

@@ -28,6 +28,7 @@
     "react-facebook-login": "^4.1.1",
     "react-hook-form": "^7.41.0",
     "react-i18next": "^12.1.1",
+    "react-markdown": "^8.0.4",
     "react-quill": "^2.0.0",
     "react-simple-code-editor": "^0.13.1",
     "sass": "^1.57.1",

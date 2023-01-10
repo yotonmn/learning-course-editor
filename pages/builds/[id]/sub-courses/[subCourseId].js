@@ -19,12 +19,14 @@ import {
     useSubCourseById,
     updateSubCourse,
 } from "@lib/service";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import dynamic from "next/dynamic";
 import CourseGroup from "@components/modal/courseGroup";
 import NewCourse from "@components/modal/newCourse";
 import Breadcrumb from "@components/molecule/breadcrumb";
 import LeftMenu from "@components/molecule/LeftMenu";
+import { Editor } from "@tinymce/tinymce-react";
+import ReactMarkdown from "react-markdown";
 
 const QuillNoSSRWrapper = dynamic(import("react-quill"), {
     ssr: false,
@@ -77,6 +79,7 @@ export default function Detail() {
     const [desc, setDesc] = useState(subCourse?.data?.content);
 
     const [form] = Form.useForm();
+    const editorRef = useRef(null);
 
     const openNotificationWithIcon = (type, data) => {
         notification[type]({
@@ -159,15 +162,97 @@ export default function Detail() {
                             </div>
                             <div className="max-h-screen overflow-y-auto">
                                 {editMode ? (
-                                    <QuillNoSSRWrapper
-                                        modules={modules}
-                                        theme="snow"
-                                        className="hs-editor mt-3 pb-36"
-                                        value={desc || subCourse?.data?.content}
-                                        onChange={addContent}
+                                    // <Editor
+                                    //     apiKey="6txtqjyoakt14laf9nspotnfhh3a39axurq82x8ego0yq4h1"
+                                    //     onInit={(evt, editor) =>
+                                    //         (editorRef.current = editor)
+                                    //     }
+                                    //     initialValue={
+                                    //         desc || subCourse?.data?.content
+                                    //     }
+                                    //     init={{
+                                    //         height: 500,
+                                    //         menubar: false,
+                                    //         plugins: [
+                                    //             "advlist",
+                                    //             "autolink",
+                                    //             "lists",
+                                    //             "link",
+                                    //             "image",
+                                    //             "charmap",
+                                    //             "preview",
+                                    //             "anchor",
+                                    //             "searchreplace",
+                                    //             "visualblocks",
+                                    //             "code",
+                                    //             "fullscreen",
+                                    //             "insertdatetime",
+                                    //             "media",
+                                    //             "table",
+                                    //             "code",
+                                    //             "help",
+                                    //             "wordcount",
+                                    //             "codesample",
+                                    //             "code",
+                                    //         ],
+                                    //         codesample_languages: [
+                                    //             {
+                                    //                 text: "HTML/XML",
+                                    //                 value: "markup",
+                                    //             },
+                                    //             {
+                                    //                 text: "JavaScript",
+                                    //                 value: "javascript",
+                                    //             },
+                                    //             { text: "CSS", value: "css" },
+                                    //             { text: "PHP", value: "php" },
+                                    //             { text: "Ruby", value: "ruby" },
+                                    //             {
+                                    //                 text: "Python",
+                                    //                 value: "python",
+                                    //             },
+                                    //             { text: "Java", value: "java" },
+                                    //             { text: "C", value: "c" },
+                                    //             { text: "C#", value: "csharp" },
+                                    //             { text: "C++", value: "cpp" },
+                                    //         ],
+                                    //         toolbar:
+                                    //             "undo redo | blocks | " +
+                                    //             "bold italic forecolor | alignleft aligncenter " +
+                                    //             "alignright alignjustify | bullist numlist outdent indent | " +
+                                    //             "removeformat | help |" +
+                                    //             "codesample " +
+                                    //             "image",
+                                    //         content_style:
+                                    //             "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+                                    //     }}
+                                    // />
+                                    // <input
+                                    //     className="hs-input w-full"
+                                    //     type="text"
+                                    //     placeholder="Гарчиг"
+                                    //     value={
+                                    //         title ||
+                                    //         subCourse?.data?.subCourseName
+                                    //     }
+                                    //     onChange={(e) =>
+                                    //         setTitle(e.target.value)
+                                    //     }
+                                    // />
+                                    <textarea
+                                        id="w3review"
+                                        className="hs-input w-full max-h-96"
+                                        rows="300"
+                                        cols="50"
+                                        value={desc}
+                                        onChange={(e) =>
+                                            setDesc(e.target.value)
+                                        }
                                     />
                                 ) : (
-                                    <p>{subCourse?.data?.content}</p>
+                                    <ReactMarkdown>
+                                        {subCourse?.data?.content}
+                                    </ReactMarkdown>
                                 )}
                             </div>
                         </div>
