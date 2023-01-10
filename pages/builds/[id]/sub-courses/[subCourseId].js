@@ -19,7 +19,7 @@ import {
     useSubCourseById,
     updateSubCourse,
 } from "@lib/service";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import dynamic from "next/dynamic";
 import CourseGroup from "@components/modal/courseGroup";
 import NewCourse from "@components/modal/newCourse";
@@ -27,6 +27,8 @@ import Breadcrumb from "@components/molecule/breadcrumb";
 import LeftMenu from "@components/molecule/LeftMenu";
 import { Editor } from "@tinymce/tinymce-react";
 import ReactMarkdown from "react-markdown";
+import hljs from "highlight.js";
+import { marked } from "marked";
 
 const QuillNoSSRWrapper = dynamic(import("react-quill"), {
     ssr: false,
@@ -77,6 +79,11 @@ export default function Detail() {
     console.log("🚀 ~ file: [subCourseId].js:71 ~ Detail ~ title", title);
 
     const [desc, setDesc] = useState(subCourse?.data?.content);
+    const markDown = subCourse?.data?.content;
+
+    useEffect(() => {
+        hljs.highlightAll();
+    }, [subCourse]);
 
     const [form] = Form.useForm();
     const editorRef = useRef(null);
@@ -250,9 +257,14 @@ export default function Detail() {
                                         }
                                     />
                                 ) : (
-                                    <ReactMarkdown>
-                                        {subCourse?.data?.content}
-                                    </ReactMarkdown>
+                                    markDown && (
+                                        <div
+                                            dangerouslySetInnerHTML={{
+                                                __html: marked(markDown),
+                                            }}
+                                            className="hs-markdown"
+                                        ></div>
+                                    )
                                 )}
                             </div>
                         </div>

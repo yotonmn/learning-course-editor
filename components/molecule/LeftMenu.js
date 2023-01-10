@@ -10,13 +10,26 @@ import {
     Switch,
 } from "antd";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
-export default function LeftMenu({ detail, id }) {
-    console.log("🚀 ~ file: LeftMenu.js:15 ~ LeftMenu ~ detail", detail);
+export default function LeftMenu({ detail, id, course }) {
+    console.log("🚀 ~ file: LeftMenu.js:16 ~ LeftMenu ~ course", course);
+
     const router = useRouter();
     return (
         <div className="w-80 border-r shrink-0 border-trueGray-700 pb-8 pt-8">
             <Space direction="vertical" size={30}>
+                <Image
+                    src={
+                        course?.courseImageUrl ||
+                        "https://source.unsplash.com/random/300x300/?2"
+                    }
+                    height={160}
+                    width={368}
+                    alt="Cover"
+                    priority="true"
+                    className="object-cover   w-full h-full rounded-t-2xl shadow-lg"
+                />
                 <a
                     onClick={() => {
                         router.push({

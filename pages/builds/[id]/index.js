@@ -73,6 +73,7 @@ export default function Detail() {
     const [selectedOption, setSelectedOption] = useState();
 
     const { data: course, loading: courseLoading } = useCourseById(id);
+
     console.log("🚀 ~ file: index.js:76 ~ Detail ~ course", course);
     const [title, setTitle] = useState(course?.course?.courseName);
     const [desc, setDesc] = useState(course?.course?.courseDescription);
@@ -288,7 +289,11 @@ export default function Detail() {
                 <div className="h-full border-t border-trueGray-700 ">
                     <div className="h-full container mx-auto flex px-2">
                         {/* {course?.course?.courseName} */}
-                        <LeftMenu detail={course?.subCourses} id={id} />
+                        <LeftMenu
+                            detail={course?.subCourses}
+                            course={course?.course}
+                            id={id}
+                        />
                         <div className="w-full p-8 max-h-screen overflow-y-auto">
                             <Breadcrumb
                                 courseName={course?.course?.courseName}

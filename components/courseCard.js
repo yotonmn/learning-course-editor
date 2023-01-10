@@ -6,6 +6,7 @@ import Image from "next/image";
 import { data } from "autoprefixer";
 export default function CourseCard(data) {
     const detail = data?.data;
+    console.log("🚀 ~ file: courseCard.js:9 ~ CourseCard ~ detail", detail);
 
     const router = useRouter();
 
@@ -36,6 +37,7 @@ export default function CourseCard(data) {
                     <div className="h-40">
                         <Image
                             src={
+                                detail?.courseImageUrl ||
                                 "https://source.unsplash.com/random/300x300/?2"
                             }
                             height={160}
@@ -52,7 +54,7 @@ export default function CourseCard(data) {
                     <div className="flex flex-col justify-between p-6 space-y-8 ">
                         <div className="space-y-2">
                             <p className="dark:text-gray-100">
-                                {detail?.courseDescription}
+                                {detail?.courseSubDescription}
                             </p>
                         </div>
                         <Button

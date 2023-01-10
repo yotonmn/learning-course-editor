@@ -11,6 +11,7 @@ import {
 import { clearToken, saveToken } from "@lib/auth";
 import { SessionContext } from "@lib/context";
 import "react-quill/dist/quill.snow.css";
+import "highlight.js/styles/default.css";
 
 export default function App({ Component, pageProps }) {
     const router = useRouter();

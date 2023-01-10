@@ -30,6 +30,7 @@ const nextConfig = {
             "api.auction.ihcdao.io",
             "source.boringavatars.com",
             "source.unsplash.com",
+            "images.unsplash.com",
         ],
     },
 
