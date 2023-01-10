@@ -20,6 +20,7 @@ import {
     createChapter,
     createSubCourse,
     updateCourse,
+    deleteCourseById,
 } from "@lib/service";
 import { useState, useMemo, useRef, useEffect } from "react";
 import { getAccessToken, getRefreshToken, saveToken } from "@lib/auth";
@@ -130,6 +131,24 @@ export default function Detail() {
             );
             // setLoading(false);
         }
+    };
+
+    const deleteCourse = async () => {
+        console.log("triggered");
+        const { data, status } = await deleteCourseById(id);
+        console.log("🚀 ~ file: index.js:139 ~ deleteCourse ~ id", id);
+        console.log("🚀 ~ file: index.js:138 ~ deleteCourse ~ data", data);
+        console.log("🚀 ~ file: index.js:138 ~ deleteCourse ~ status", status);
+        openNotificationWithIcon("success", "Successfully deleted course!");
+        router.push("/");
+        // if (status === 200) {
+        // } else {
+        //     openNotificationWithIcon(
+        //         "error",
+        //         data?.message || "Failed to delete course!"
+        //     );
+        //     // setLoading(false);
+        // }
     };
 
     const addContent = (value) => {
@@ -375,9 +394,6 @@ export default function Detail() {
                                 ) : (
                                     <p>{course?.course?.courseDescription}</p>
                                 )}
-                                <button onClick={log}>
-                                    Log editor content
-                                </button>
                             </div>
                         </div>
                     </div>
@@ -435,11 +451,9 @@ export default function Detail() {
                                     <Button
                                         type="default"
                                         className="hs-btn hs-btn-text my-auto "
-                                        onClick={() => {
-                                            setDeleteModalOpen(true);
-                                        }}
+                                        onClick={() => deleteCourse()}
                                     >
-                                        Delete this sub-lesson
+                                        Delete this course
                                     </Button>
                                 </Space>
                             )}
