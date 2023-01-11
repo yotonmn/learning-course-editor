@@ -17,7 +17,7 @@ export default function LeftMenu({ detail, id, course }) {
 
     const router = useRouter();
     return (
-        <div className="w-80 border-r shrink-0 border-trueGray-700 pb-8 pt-8">
+        <div className="w-80 border-r shrink-0 border-trueGray-700 pb-8 pt-8 max-h-screen overflow-y-auto">
             <Space direction="vertical" size={30}>
                 <Image
                     src={
@@ -28,7 +28,7 @@ export default function LeftMenu({ detail, id, course }) {
                     width={368}
                     alt="Cover"
                     priority="true"
-                    className="object-cover   w-full h-full rounded-t-2xl shadow-lg"
+                    className="object-cofver   w-full h-full rounded-t-2xl shadow-lg"
                 />
                 <a
                     onClick={() => {

@@ -248,10 +248,10 @@ export default function Detail() {
                                     // />
                                     <textarea
                                         id="w3review"
-                                        className="hs-input w-full max-h-96"
+                                        className="hs-input w-full "
                                         rows="300"
                                         cols="50"
-                                        value={desc}
+                                        value={desc || subCourse?.data?.content}
                                         onChange={(e) =>
                                             setDesc(e.target.value)
                                         }
