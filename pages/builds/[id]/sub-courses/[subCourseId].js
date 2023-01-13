@@ -135,7 +135,9 @@ export default function Detail() {
         var object = {
             examValidation: {
                 exam: {
-                    type: submitType,
+                    type:
+                        submitType ||
+                        subCourse?.data?.examValidation?.exam?.type,
                     question: submissionDesc,
                 },
             },
