@@ -241,15 +241,20 @@ export default function Detail() {
                             </div>
                             <div className=" pb-3">
                                 {editMode ? (
-                                    <input
-                                        className="hs-input mt-3 w-full"
-                                        type="text"
-                                        placeholder="Thumbnail image URL"
-                                        value={headerImageUrl}
-                                        onChange={(e) =>
-                                            setHeaderImageUrl(e.target.value)
-                                        }
-                                    />
+                                    <div className="w-full">
+                                        Header Image
+                                        <input
+                                            className="hs-input mt-3 w-full"
+                                            type="text"
+                                            placeholder="Thumbnail image URL"
+                                            value={headerImageUrl}
+                                            onChange={(e) =>
+                                                setHeaderImageUrl(
+                                                    e.target.value
+                                                )
+                                            }
+                                        />
+                                    </div>
                                 ) : (
                                     <div className="w-full">
                                         Header Image
