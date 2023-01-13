@@ -82,11 +82,11 @@ export default function Detail() {
         course?.course?.courseSubDescription
     );
     const [headerImageUrl, setHeaderImageUrl] = useState(
-        course?.course?.courseSubDescription
+        course?.course?.courseThumbNailUrl
     );
-
+    console.log(headerImageUrl);
     const [headerBannerUrl, setHeaderBannerUrl] = useState(
-        course?.course?.courseSubDescription
+        course?.course?.courseCoverUrl
     );
     const [form] = Form.useForm();
     const editorRef = useRef(null);
@@ -131,6 +131,8 @@ export default function Detail() {
         var object = {
             courseName: title,
             courseDescription: editorRef.current.getContent(),
+            courseThumbNailUrl: headerImageUrl,
+            courseCoverUrl: headerBannerUrl,
         };
         const { data, status } = await updateCourse(id, object);
         if (status === 200) {
@@ -261,7 +263,8 @@ export default function Detail() {
                                         <div className="h-[130px] w-full">
                                             <Image
                                                 src={
-                                                    course?.courseImageUrl ||
+                                                    course?.course
+                                                        ?.courseThumbNailUrl ||
                                                     "https://source.unsplash.com/random/300x300/?2"
                                                 }
                                                 height={130}
@@ -293,7 +296,7 @@ export default function Detail() {
                                             <Image
                                                 src={
                                                     course?.course
-                                                        ?.courseImageUrl ||
+                                                        ?.courseCoverUrl ||
                                                     "https://source.unsplash.com/random/300x300/?2"
                                                 }
                                                 height={260}

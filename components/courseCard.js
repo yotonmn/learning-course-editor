@@ -37,7 +37,7 @@ export default function CourseCard(data) {
                     <div className="h-40">
                         <Image
                             src={
-                                detail?.courseImageUrl ||
+                                detail?.courseThumbNailUrl ||
                                 "https://source.unsplash.com/random/300x300/?2"
                             }
                             height={160}

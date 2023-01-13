@@ -21,7 +21,7 @@ export default function LeftMenu({ detail, id, course }) {
             <Space direction="vertical" size={30}>
                 <Image
                     src={
-                        course?.courseImageUrl ||
+                        course?.courseThumbNailUrl ||
                         "https://source.unsplash.com/random/300x300/?2"
                     }
                     height={160}
