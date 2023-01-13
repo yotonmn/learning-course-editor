@@ -27,6 +27,7 @@ export default function CreateCourse() {
     const [desc, setDesc] = useState("");
     const [subDesc, setSubDesc] = useState("");
     const [headerImageUrl, setHeaderImageUrl] = useState("");
+    const [headerBannerUrl, setHeaderBannerUrl] = useState("");
 
     const router = useRouter();
     const editorRef = useRef(null);
@@ -110,10 +111,19 @@ export default function CreateCourse() {
                                 <input
                                     className="hs-input mt-3 w-full"
                                     type="text"
-                                    placeholder="Header image URL"
+                                    placeholder="Thumbnail image URL"
                                     value={headerImageUrl}
                                     onChange={(e) =>
                                         setHeaderImageUrl(e.target.value)
+                                    }
+                                />
+                                <input
+                                    className="hs-input mt-3 w-full"
+                                    type="text"
+                                    placeholder="Banner image URL"
+                                    value={headerBannerUrl}
+                                    onChange={(e) =>
+                                        setHeaderBannerUrl(e.target.value)
                                     }
                                 />
                                 <input

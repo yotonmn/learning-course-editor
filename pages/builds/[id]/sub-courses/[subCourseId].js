@@ -9,7 +9,7 @@ import {
     Input,
     notification,
     Descriptions,
-    Switch,
+    Radio,
 } from "antd";
 import { useRouter } from "next/router";
 import {
@@ -66,6 +66,7 @@ export default function Detail() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalOpenGroup, setIsModalOpenGroup] = useState(false);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [submissionModal, setSubmissionModal] = useState(false);
 
     const { data: course, loading: courseLoading } = useCourseById(id);
     console.log("🚀 ~ file: [subCourseId].js:64 ~ Detail ~ course", course);
@@ -79,14 +80,22 @@ export default function Detail() {
     console.log("🚀 ~ file: [subCourseId].js:71 ~ Detail ~ title", title);
 
     const [desc, setDesc] = useState(subCourse?.data?.content);
+    const [submitType, setSubmitType] = useState(
+        subCourse?.data?.examValidation?.exam?.type
+    );
+    console.log(
+        "🚀 ~ file: [subCourseId].js:84 ~ Detail ~ submitType",
+        submitType
+    );
+    const [submissionDesc, setSubmissionDesc] = useState(
+        subCourse?.data?.examValidation?.exam?.question
+    );
+
     const markDown = subCourse?.data?.content;
 
     useEffect(() => {
         hljs.highlightAll();
     }, [subCourse]);
-
-    const [form] = Form.useForm();
-    const editorRef = useRef(null);
 
     const openNotificationWithIcon = (type, data) => {
         notification[type]({
@@ -99,6 +108,12 @@ export default function Detail() {
         var object = {
             subCourseName: title,
             content: desc,
+            examValidation: {
+                exam: {
+                    type: submitType,
+                    question: submissionDesc,
+                },
+            },
         };
         const { data, status } = await updateSubCourse(subCourseId, object);
         if (status === 200) {
@@ -112,6 +127,39 @@ export default function Detail() {
             openNotificationWithIcon(
                 "error",
                 data?.message || "Failed to update sub course!"
+            );
+            // setLoading(false);
+        }
+    };
+
+    const saveValidation = async () => {
+        if (!submitType || !submissionDesc) {
+            openNotificationWithIcon(
+                "error",
+
+                "Failed to update sub course submission! Insert data"
+            );
+        }
+        var object = {
+            examValidation: {
+                exam: {
+                    type: submitType,
+                    question: submissionDesc,
+                },
+            },
+        };
+        const { data, status } = await updateSubCourse(subCourseId, object);
+        if (status === 200) {
+            openNotificationWithIcon(
+                "success",
+                "Successfully updated sub course submission!"
+            );
+
+            setEditMode(false);
+        } else {
+            openNotificationWithIcon(
+                "error",
+                data?.message || "Failed to update sub course submission!"
             );
             // setLoading(false);
         }
@@ -167,7 +215,7 @@ export default function Detail() {
                                     </h2>
                                 )}
                             </div>
-                            <div className="max-h-screen overflow-y-auto">
+                            <div className="max-h-screen overflow-y-auto pb-32">
                                 {editMode ? (
                                     // <Editor
                                     //     apiKey="6txtqjyoakt14laf9nspotnfhh3a39axurq82x8ego0yq4h1"
@@ -234,18 +282,7 @@ export default function Detail() {
                                     //             "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
                                     //     }}
                                     // />
-                                    // <input
-                                    //     className="hs-input w-full"
-                                    //     type="text"
-                                    //     placeholder="Гарчиг"
-                                    //     value={
-                                    //         title ||
-                                    //         subCourse?.data?.subCourseName
-                                    //     }
-                                    //     onChange={(e) =>
-                                    //         setTitle(e.target.value)
-                                    //     }
-                                    // />
+
                                     <textarea
                                         id="w3review"
                                         className="hs-input w-full "
@@ -322,6 +359,13 @@ export default function Detail() {
                                     </Button>
                                     <Button
                                         type="default"
+                                        className="hs-btn hs-btn-white my-auto "
+                                        onClick={() => setSubmissionModal(true)}
+                                    >
+                                        Submission
+                                    </Button>
+                                    <Button
+                                        type="default"
                                         className="hs-btn hs-btn-text my-auto "
                                         onClick={() => {
                                             setDeleteModalOpen(true);
@@ -347,6 +391,62 @@ export default function Detail() {
                 course={course}
                 id={id}
             />
+            <Modal
+                open={submissionModal}
+                onCancel={() => setSubmissionModal(false)}
+                footer={null}
+                className="hs-modal"
+            >
+                <Space className="w-full" direction="vertical" size={20}>
+                    <h4 className="text-center">Insert submission</h4>
+                    <Radio.Group
+                        defaultValue={
+                            submitType ||
+                            subCourse?.data?.examValidation?.exam?.type
+                        }
+                        buttonStyle="solid"
+                        className="justify-center flex"
+                        onChange={(e) => setSubmitType(e.target.value)}
+                    >
+                        <Radio.Button value="LINK">Link</Radio.Button>
+                        <Radio.Button value="IMAGE">Image</Radio.Button>
+                        <Radio.Button value="FILE">File</Radio.Button>
+                        {/* <Radio.Button value="d">Chengdu</Radio.Button> */}
+                    </Radio.Group>
+                    <input
+                        className="hs-input w-full"
+                        type="text"
+                        placeholder="Оролтын тайлбар"
+                        value={
+                            submissionDesc ||
+                            subCourse?.data?.examValidation?.exam?.question
+                        }
+                        onChange={(e) => setSubmissionDesc(e.target.value)}
+                    />
+                    <Space
+                        className="w-full justify-end"
+                        direction="vertical"
+                        size={10}
+                    >
+                        <Button
+                            type="primary"
+                            className="hs-btn hs-btn-primary w-full"
+                            block
+                            onClick={() => saveValidation()}
+                        >
+                            Save
+                        </Button>
+                        <Button
+                            type="default"
+                            className="hs-btn hs-btn-default"
+                            block
+                            onClick={() => setSubmissionModal(false)}
+                        >
+                            Cancel
+                        </Button>
+                    </Space>
+                </Space>
+            </Modal>
             <Modal
                 open={deleteModalOpen}
                 onCancel={() => setDeleteModalOpen(false)}

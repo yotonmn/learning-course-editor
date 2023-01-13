@@ -31,6 +31,7 @@ import Breadcrumb from "@components/molecule/breadcrumb";
 import LeftMenu from "@components/molecule/LeftMenu";
 import SERVER_SETTINGS from "@lib/serverSettings";
 import { Editor } from "@tinymce/tinymce-react";
+import Image from "next/image";
 
 const QuillNoSSRWrapper = dynamic(import("react-quill"), {
     ssr: false,
@@ -77,7 +78,16 @@ export default function Detail() {
     console.log("🚀 ~ file: index.js:76 ~ Detail ~ course", course);
     const [title, setTitle] = useState(course?.course?.courseName);
     const [desc, setDesc] = useState(course?.course?.courseDescription);
+    const [subDesc, setSubDesc] = useState(
+        course?.course?.courseSubDescription
+    );
+    const [headerImageUrl, setHeaderImageUrl] = useState(
+        course?.course?.courseSubDescription
+    );
 
+    const [headerBannerUrl, setHeaderBannerUrl] = useState(
+        course?.course?.courseSubDescription
+    );
     const [form] = Form.useForm();
     const editorRef = useRef(null);
 
@@ -170,115 +180,6 @@ export default function Detail() {
     };
 
     const quillRef = useRef(null);
-    // useEffect(() => {
-    //     if (quillRef.current) {
-    //         const quill = quillRef.current;
-    //         console.log("🚀 ~ file: index.js:147 ~ useEffect ~ quill", quill);
-    //         // Use the Quill editor instance
-    //         imageHandler(quill);
-    //     }
-    // }, []);
-
-    const imageHandler = (a) => {
-        const input = document.createElement("input");
-        input.setAttribute("type", "file");
-        input.setAttribute("accept", "image/*");
-        input.click();
-
-        input.onchange = () => {
-            const file = input.files[0];
-
-            // file type is only image.
-            if (/^image\//.test(file.type)) {
-                saveToServer(file);
-            } else {
-                console.warn("You could only upload images.");
-            }
-        };
-    };
-    function saveToServer(file) {
-        const fd = new FormData();
-        fd.append("upload", file);
-
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", "/api/media", true);
-        xhr.onload = () => {
-            if (xhr.status === 201) {
-                // this is callback data: url
-                const url = JSON.parse(xhr.responseText).url;
-                insertToEditor(url);
-            }
-        };
-        xhr.send(fd);
-    }
-
-    function insertToEditor(url) {
-        editorRef.current.getEditor().insertEmbed(null, "image", url);
-    }
-
-    const onChange = ({ fileList: newFileList }) => {
-        setHeaderImage(newFileList);
-        var axios = require("axios");
-        var FormData = require("form-data");
-        if (newFileList?.length === 0) {
-            openNotificationWithIcon("error", "Header image оруулна уу?");
-        }
-        if (newFileList?.length === 0) {
-            return null;
-        }
-        var data = new FormData();
-        data.append(
-            "idFront",
-            newFileList[0]?.originFileObj,
-            newFileList[0]?.originFileObj?.name
-        );
-        var config = {
-            method: "POST",
-            url: `${SERVER_SETTINGS.baseURL}/api/userVerification`,
-            headers: {},
-            data: data,
-        };
-        const token = getAccessToken();
-        if (token) {
-            config.headers["Authorization"] = "Bearer " + token;
-        }
-        axios(config)
-            .then(async (response) => {
-                if (response.status === 201) {
-                    setSubmitLoading(false);
-                    openNotificationWithIcon(
-                        "success",
-                        "Амжилттай зураг upload хийлээ!"
-                    );
-                }
-            })
-            .catch((error) => {
-                const originalRequest = error.config;
-                openNotificationWithIcon("error", "Амжилтгүй!");
-                if (error.response?.status === 401 && !originalRequest._retry) {
-                    originalRequest._retry = true;
-
-                    return axios
-                        .post(
-                            `${SERVER_SETTINGS.baseURL}/api/refresh-access-token`,
-                            {
-                                refreshToken: getRefreshToken(),
-                            }
-                        )
-                        .then((res) => {
-                            if (res.status === 200) {
-                                saveToken(res.data);
-                            }
-                        });
-                }
-            });
-    };
-
-    const log = () => {
-        if (editorRef.current) {
-            console.log(editorRef.current.getContent());
-        }
-    };
 
     return (
         <div className=" bg-trueGray-900 h-screen overflow-clip">
@@ -302,10 +203,12 @@ export default function Detail() {
                             <div className=" pb-3">
                                 {editMode ? (
                                     <input
-                                        className="hs-input"
+                                        className="hs-input w-full"
                                         type="text"
                                         placeholder="Гарчиг"
-                                        value={course?.course?.courseName}
+                                        value={
+                                            title || course?.course?.courseName
+                                        }
                                         onChange={(e) =>
                                             setTitle(e.target.value)
                                         }
@@ -316,22 +219,89 @@ export default function Detail() {
                                     </h2>
                                 )}
                             </div>
-                            {/* <Upload
-                                listType="picture"
-                                fileList={headerImage}
-                                onChange={onChange}
-                                maxCount={1}
-                                className="hs-upload-image"
-                            >
-                                <Button
-                                    icon={<UploadOutlined />}
-                                    type="primary"
-                                    className="hs-btn-s hs-btn-primary mb-3"
-                                    listType="picture-card"
-                                >
-                                    Upload Header image
-                                </Button>
-                            </Upload> */}
+                            <div className=" pb-3">
+                                {editMode ? (
+                                    <input
+                                        className="hs-input w-full"
+                                        type="text"
+                                        placeholder="Богино тайлбар"
+                                        value={
+                                            subDesc ||
+                                            course?.course?.courseSubDescription
+                                        }
+                                        onChange={(e) =>
+                                            setSubDesc(e.target.value)
+                                        }
+                                    />
+                                ) : (
+                                    <p className="max-w-2xl mt-3 text-3xl font-bold leading-snug tracking-tight text-gray-800 lg:leading-tight lg:text-4xl dark:text-white">
+                                        {course?.course?.courseSubDescription}
+                                    </p>
+                                )}
+                            </div>
+                            <div className=" pb-3">
+                                {editMode ? (
+                                    <input
+                                        className="hs-input mt-3 w-full"
+                                        type="text"
+                                        placeholder="Thumbnail image URL"
+                                        value={headerImageUrl}
+                                        onChange={(e) =>
+                                            setHeaderImageUrl(e.target.value)
+                                        }
+                                    />
+                                ) : (
+                                    <div className="w-full">
+                                        Header Image
+                                        <div className="h-[130px] w-full">
+                                            <Image
+                                                src={
+                                                    course?.courseImageUrl ||
+                                                    "https://source.unsplash.com/random/300x300/?2"
+                                                }
+                                                height={130}
+                                                width={300}
+                                                alt="Cover"
+                                                // priority="true"
+                                                className="object-cover rounded-xl max-h-full w-full shadow-lg"
+                                            />
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className=" pb-3">
+                                {editMode ? (
+                                    <input
+                                        className="hs-input mt-3 w-full"
+                                        type="text"
+                                        placeholder="Banner image URL"
+                                        value={headerBannerUrl}
+                                        onChange={(e) =>
+                                            setHeaderBannerUrl(e.target.value)
+                                        }
+                                    />
+                                ) : (
+                                    <div className="w-full">
+                                        Banner Image
+                                        <div className="h-[260px] w-full mt-3 ">
+                                            <Image
+                                                src={
+                                                    course?.course
+                                                        ?.courseImageUrl ||
+                                                    "https://source.unsplash.com/random/300x300/?2"
+                                                }
+                                                height={260}
+                                                width={300}
+                                                alt="Cover"
+                                                // priority="true"
+                                                className="object-cover rounded-xl max-h-full w-full shadow-lg"
+                                            />
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
                             <div className="mt-3">
                                 {editMode ? (
                                     <Editor
