@@ -24,7 +24,6 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
     const [form] = Form.useForm();
 
     const onChange = (checked) => {
-        console.log(`switch to ${checked}`);
         setDeleteMode(checked);
     };
 

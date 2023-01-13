@@ -75,7 +75,6 @@ export default function Detail() {
 
     const { data: course, loading: courseLoading } = useCourseById(id);
 
-    console.log("🚀 ~ file: index.js:76 ~ Detail ~ course", course);
     const [title, setTitle] = useState(course?.course?.courseName);
     const [desc, setDesc] = useState(course?.course?.courseDescription);
     const [subDesc, setSubDesc] = useState(
@@ -84,7 +83,7 @@ export default function Detail() {
     const [headerImageUrl, setHeaderImageUrl] = useState(
         course?.course?.courseThumbNailUrl
     );
-    console.log(headerImageUrl);
+
     const [headerBannerUrl, setHeaderBannerUrl] = useState(
         course?.course?.courseCoverUrl
     );
@@ -149,7 +148,6 @@ export default function Detail() {
     };
 
     const deleteCourse = async () => {
-        console.log("triggered");
         const { data, status } = await deleteCourseById(id);
         console.log("🚀 ~ file: index.js:139 ~ deleteCourse ~ id", id);
         console.log("🚀 ~ file: index.js:138 ~ deleteCourse ~ data", data);

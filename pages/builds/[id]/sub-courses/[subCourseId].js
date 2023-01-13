@@ -58,7 +58,7 @@ const modules = {
 export default function Detail() {
     const router = useRouter();
     const id = +router.query.id;
-    console.log(router.query.subCourseId);
+
     const subCourseId = +router.query.subCourseId;
 
     const [editMode, setEditMode] = useState(false);
@@ -69,24 +69,16 @@ export default function Detail() {
     const [submissionModal, setSubmissionModal] = useState(false);
 
     const { data: course, loading: courseLoading } = useCourseById(id);
-    console.log("🚀 ~ file: [subCourseId].js:64 ~ Detail ~ course", course);
-    const { data: subCourse } = useSubCourseById(subCourseId);
-    console.log(
-        "🚀 ~ file: [subCourseId].js:66 ~ Detail ~ subCourse",
-        subCourse
-    );
-    const [title, setTitle] = useState(subCourse?.data?.subCourseName);
 
-    console.log("🚀 ~ file: [subCourseId].js:71 ~ Detail ~ title", title);
+    const { data: subCourse } = useSubCourseById(subCourseId);
+
+    const [title, setTitle] = useState(subCourse?.data?.subCourseName);
 
     const [desc, setDesc] = useState(subCourse?.data?.content);
     const [submitType, setSubmitType] = useState(
         subCourse?.data?.examValidation?.exam?.type
     );
-    console.log(
-        "🚀 ~ file: [subCourseId].js:84 ~ Detail ~ submitType",
-        submitType
-    );
+
     const [submissionDesc, setSubmissionDesc] = useState(
         subCourse?.data?.examValidation?.exam?.question
     );
@@ -108,12 +100,12 @@ export default function Detail() {
         var object = {
             subCourseName: title,
             content: desc,
-            examValidation: {
-                exam: {
-                    type: submitType,
-                    question: submissionDesc,
-                },
-            },
+            // examValidation: {
+            //     exam: {
+            //         type: submitType,
+            //         question: submissionDesc,
+            //     },
+            // },
         };
         const { data, status } = await updateSubCourse(subCourseId, object);
         if (status === 200) {

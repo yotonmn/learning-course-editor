@@ -19,13 +19,9 @@ import {
 import { useState } from "react";
 
 export default function NewCourse({ visible, setVisible, course, id }) {
-    console.log("🚀 ~ file: newCourse.js:21 ~ NewCourse ~ course", course);
     const [form] = Form.useForm();
     const [chosenArray, setChosenArray] = useState([]);
-    console.log(
-        "🚀 ~ file: newCourse.js:25 ~ NewCourse ~ chosenArray",
-        chosenArray
-    );
+
     const [order, setOrder] = useState(chosenArray.length + 1);
 
     const onFinish = async (values) => {
@@ -55,7 +51,6 @@ export default function NewCourse({ visible, setVisible, course, id }) {
         }
     };
     const getOrder = (e) => {
-        console.log(e.target.value);
         const arr = course?.subCourses;
         const chapters = Object.values(arr)
             .flat()
@@ -64,10 +59,6 @@ export default function NewCourse({ visible, setVisible, course, id }) {
         setChosenArray(chapters);
 
         // const chosenChapter = chapters[e.target.value];
-        console.log(
-            "🚀 ~ file: newCourse.js:52 ~ getOrder ~ chosenChapter",
-            chapters
-        );
     };
 
     const openNotificationWithIcon = (type, data) => {

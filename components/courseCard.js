@@ -6,7 +6,6 @@ import Image from "next/image";
 import { data } from "autoprefixer";
 export default function CourseCard(data) {
     const detail = data?.data;
-    console.log("🚀 ~ file: courseCard.js:9 ~ CourseCard ~ detail", detail);
 
     const router = useRouter();
 
