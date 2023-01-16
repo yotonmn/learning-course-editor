@@ -6,7 +6,7 @@ import {
     Form,
     Input,
     notification,
-    Descriptions,
+    Radio,
     Switch,
 } from "antd";
 import { useState } from "react";
@@ -14,12 +14,17 @@ import {
     useCourseById,
     createChapter,
     createSubCourse,
-    useSubCourseById,
-    updateSubCourse,
+    updateChapter,
+    deleteChapter,
 } from "@lib/service";
 
 export default function CourseGroup({ visible, setVisible, course, id }) {
     const [deleteMode, setDeleteMode] = useState(false);
+    const [submitType, setSubmitType] = useState("");
+    const [createdoOrder, setCreatedOrder] = useState([]);
+    const [currentChapter, setCurrentChapter] = useState("");
+
+    const [order, setOrder] = useState(0);
 
     const [form] = Form.useForm();
 
@@ -56,7 +61,7 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
         //     chapterName: values.title,
         // };
 
-        const { data, status } = await createChapter(id, values);
+        const { data, status } = await deleteChapter(id, values);
 
         if (status === 200) {
             openNotificationWithIcon(
@@ -71,6 +76,69 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
             );
             // setLoading(false);
         }
+    };
+
+    const onFinishUpdate = async (values) => {
+        console.log(values);
+        var object;
+        if (!values.chapterName && !order) {
+            openNotificationWithIcon("error", "Failed to update chapter!");
+            return;
+        }
+        if (values.chapterName === undefined) {
+            object = {
+                chapterName: values.chapter,
+                order: order,
+            };
+        } else if (values.order === undefined) {
+            object = {
+                chapterName: values.chapter,
+                newChapterName: values.chapterName,
+            };
+        } else {
+            object = {
+                chapterName: values.chapter,
+                newChapterName: values.chapterName,
+                order: order,
+            };
+        }
+        console.log(object);
+
+        const { data, status } = await updateChapter(id, object);
+
+        if (status === 200) {
+            openNotificationWithIcon(
+                "success",
+                "Successfully updated chapter!"
+            );
+            form.resetFields();
+        } else {
+            openNotificationWithIcon(
+                "error",
+                data?.error || "Failed to update course!"
+            );
+            // setLoading(false);
+        }
+    };
+
+    const getOrder = (e) => {
+        console.log(course);
+
+        const arr = course?.course?.courseChapter;
+        const currentChapter = Object.values(arr)
+            .flat()
+            .filter((subCourse) => subCourse === e.target.value);
+        setCurrentChapter(currentChapter);
+
+        const length = arr.length;
+        var order = [];
+        for (let i = 1; i <= length; i++) {
+            order.push(i);
+        }
+        console.log(order);
+        setCreatedOrder(order);
+
+        // const chosenChapter = chapters[e.target.value];
     };
 
     const openNotificationWithIcon = (type, data) => {
@@ -90,11 +158,19 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
             >
                 <Space className="w-full" direction="vertical" size={16}>
                     <h5>Шинэ бүлэг</h5>
-                    <Space>
-                        <Switch onChange={onChange} className="bg-gray-400" />
-                        <h5 className="text-white">Бүлэг устгах </h5>
+                    <Space className="justify-center flex">
+                        <Radio.Group
+                            defaultValue={submitType}
+                            buttonStyle="solid"
+                            className="justify-center flex"
+                            onChange={(e) => setSubmitType(e.target.value)}
+                        >
+                            <Radio.Button value="insert">Insert</Radio.Button>
+                            <Radio.Button value="update">Update</Radio.Button>
+                            <Radio.Button value="delete">Delete</Radio.Button>
+                        </Radio.Group>
                     </Space>
-                    {deleteMode ? (
+                    {submitType == "delete" && (
                         <Form
                             className="hs-row"
                             form={form}
@@ -170,7 +246,124 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
                                 </Form.Item>{" "}
                             </Space>
                         </Form>
-                    ) : (
+                    )}
+                    {submitType == "update" && (
+                        <Form
+                            className="hs-row"
+                            form={form}
+                            layout="vertical"
+                            requiredMark={true}
+                            onFinish={onFinishUpdate}
+                            autoComplete="off"
+                        >
+                            <Space
+                                className="w-full"
+                                direction="vertical"
+                                size={16}
+                            >
+                                {" "}
+                                <h5>Шинэчлэх бүлэг сонгох</h5>
+                                <Form.Item
+                                    name="chapter"
+                                    className="hs-form-item"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Enter Chapter",
+                                        },
+                                    ]}
+                                    required
+                                >
+                                    <select
+                                        placeholder="select"
+                                        className=" hs-input-custom w-full px-4"
+                                        onChange={(e) => getOrder(e)}
+                                    >
+                                        <option value="⬇️ Select a chapters ⬇️">
+                                            {" "}
+                                            -- Select a chapter --{" "}
+                                        </option>
+                                        {course?.course?.courseChapter?.map(
+                                            (item, index) => (
+                                                <option
+                                                    key={index}
+                                                    value={item}
+                                                >
+                                                    {item}
+                                                </option>
+                                            )
+                                        )}
+                                    </select>
+                                </Form.Item>
+                                {createdoOrder.length != 0 && (
+                                    <Form.Item
+                                        name="order"
+                                        className="hs-form-item"
+                                        rules={[
+                                            {
+                                                message: "Enter Order",
+                                            },
+                                        ]}
+                                        required
+                                    >
+                                        <select
+                                            placeholder="select"
+                                            className=" hs-input-custom w-full px-4"
+                                            onChange={(e) =>
+                                                setOrder(e.target.value)
+                                            }
+                                            value={order}
+                                        >
+                                            {/* <option
+                                                value={createdoOrder.length + 1}
+                                            >
+                                                Хамгийн сүүлд харуулах
+                                            </option> */}
+                                            {createdoOrder.map(
+                                                (item, index) => (
+                                                    <option
+                                                        key={index}
+                                                        value={item}
+                                                    >
+                                                        {item}
+                                                    </option>
+                                                )
+                                            )}
+                                        </select>
+                                    </Form.Item>
+                                )}
+                                {createdoOrder.length != 0 && (
+                                    <Form.Item
+                                        name="chapterName"
+                                        className="hs-form-item"
+                                        rules={[
+                                            {
+                                                message: "Enter Title",
+                                            },
+                                        ]}
+                                    >
+                                        <Input
+                                            className="hs-input"
+                                            type="text"
+                                            autoComplete="off"
+                                            placeholder="Updated chapter name"
+                                        />
+                                    </Form.Item>
+                                )}
+                                <Form.Item className="hs-form-item">
+                                    <Button
+                                        type="default"
+                                        className="hs-btn hs-btn-default"
+                                        htmlType="submit"
+                                        block
+                                    >
+                                        Update
+                                    </Button>
+                                </Form.Item>{" "}
+                            </Space>
+                        </Form>
+                    )}
+                    {submitType == "insert" && (
                         <Form
                             className="hs-row"
                             form={form}

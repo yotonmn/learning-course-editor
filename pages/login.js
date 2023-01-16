@@ -48,7 +48,7 @@ export default function Login() {
         setLoading(true);
         const data = await signInManualAdmin(values);
         //data buruu uchir sign in hj chadku
-
+        //todo aldaa zasah
         if (!data?.success) {
             // const errorTxt = await data.json();
             console.log("error");

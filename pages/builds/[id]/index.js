@@ -74,6 +74,7 @@ export default function Detail() {
     const [selectedOption, setSelectedOption] = useState();
 
     const { data: course, loading: courseLoading } = useCourseById(id);
+    console.log("🚀 ~ file: index.js:77 ~ Detail ~ course", course);
 
     const [title, setTitle] = useState(course?.course?.courseName);
     const [desc, setDesc] = useState(course?.course?.courseDescription);
@@ -401,7 +402,7 @@ export default function Detail() {
                                         className="hs-btn hs-btn-default "
                                         onClick={showModalGroup}
                                     >
-                                        Add group
+                                        Group
                                     </Button>
                                 </div>
                             </div>
@@ -552,6 +553,7 @@ export default function Detail() {
                 setVisible={() => setIsModalOpenGroup(false)}
                 course={course}
                 id={id}
+                // subCourseId={subCourseId}
             />
             <NewCourse
                 visible={isModalOpen}
