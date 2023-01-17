@@ -18,6 +18,7 @@ import {
     createSubCourse,
     useSubCourseById,
     updateSubCourse,
+    deleteSubCourse,
 } from "@lib/service";
 import { useState, useRef, useEffect } from "react";
 import dynamic from "next/dynamic";
@@ -154,6 +155,24 @@ export default function Detail() {
             openNotificationWithIcon(
                 "error",
                 data?.message || "Failed to update sub course submission!"
+            );
+            // setLoading(false);
+        }
+    };
+
+    const deleteSub = async () => {
+        const { data, status } = await deleteSubCourse(subCourseId);
+        if (status === 200) {
+            openNotificationWithIcon(
+                "success",
+                "Successfully deleted sub course!"
+            );
+
+            setEditMode(false);
+        } else {
+            openNotificationWithIcon(
+                "error",
+                data?.message || "Failed to delete sub course!"
             );
             // setLoading(false);
         }
@@ -474,6 +493,7 @@ export default function Detail() {
                         <Button
                             type="default"
                             className="hs-btn hs-btn-default"
+                            onClick={() => deleteSub()}
                             block
                         >
                             Delete
