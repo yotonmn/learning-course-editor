@@ -74,7 +74,6 @@ export default function Detail() {
     const [selectedOption, setSelectedOption] = useState();
 
     const { data: course, loading: courseLoading } = useCourseById(id);
-    console.log("🚀 ~ file: index.js:77 ~ Detail ~ course", course);
 
     const [title, setTitle] = useState(course?.course?.courseName);
     const [desc, setDesc] = useState(course?.course?.courseDescription);
@@ -110,8 +109,7 @@ export default function Detail() {
         };
         // setSubLessons([...subLessons, values]);
         const { data, status } = await createSubCourse(object);
-        console.log("🚀 ~ file: [id].js:73 ~ onFinishGroup ~ status", status);
-        console.log("🚀 ~ file: [id].js:73 ~ onFinishGroup ~ data", data);
+
         if (status === 200) {
             openNotificationWithIcon(
                 "success",
@@ -150,9 +148,7 @@ export default function Detail() {
 
     const deleteCourse = async () => {
         const { data, status } = await deleteCourseById(id);
-        console.log("🚀 ~ file: index.js:139 ~ deleteCourse ~ id", id);
-        console.log("🚀 ~ file: index.js:138 ~ deleteCourse ~ data", data);
-        console.log("🚀 ~ file: index.js:138 ~ deleteCourse ~ status", status);
+
         openNotificationWithIcon("success", "Successfully deleted course!");
         router.push("/");
         // if (status === 200) {

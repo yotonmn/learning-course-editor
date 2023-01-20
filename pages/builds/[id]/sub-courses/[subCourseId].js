@@ -72,7 +72,13 @@ export default function Detail() {
     const { data: course, loading: courseLoading } = useCourseById(id);
 
     const { data: subCourse } = useSubCourseById(subCourseId);
-
+    console.log(
+        "🚀 ~ file: [subCourseId].js:75 ~ Detail ~ subCourse",
+        subCourse
+    );
+    const [airdropAmount, setAirdropAmount] = useState(
+        subCourse?.data?.airdropAmount
+    );
     const [title, setTitle] = useState(subCourse?.data?.subCourseName);
 
     const [desc, setDesc] = useState(subCourse?.data?.content);
@@ -134,6 +140,7 @@ export default function Detail() {
             );
         }
         var object = {
+            airdropAmount,
             examValidation: {
                 exam: {
                     type:
@@ -439,6 +446,13 @@ export default function Detail() {
                             subCourse?.data?.examValidation?.exam?.question
                         }
                         onChange={(e) => setSubmissionDesc(e.target.value)}
+                    />
+                    <input
+                        className="hs-input w-full"
+                        type="number"
+                        placeholder="Өгөх токены тоо"
+                        value={airdropAmount || subCourse?.data?.airdropAmount}
+                        onChange={(e) => setAirdropAmount(e.target.value)}
                     />
                     <Space
                         className="w-full justify-end"

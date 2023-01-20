@@ -13,7 +13,6 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 
 export default function LeftMenu({ detail, id, course }) {
-    console.log("🚀 ~ file: LeftMenu.js:16 ~ LeftMenu ~ course", course);
     const router = useRouter();
     return (
         <div className="w-80 border-r shrink-0 border-trueGray-700 pb-8 pt-8 max-h-screen overflow-y-auto">
