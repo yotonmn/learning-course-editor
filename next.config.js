@@ -38,7 +38,7 @@ const nextConfig = {
         apiUrl:
             process.env.NODE_ENV === "development"
                 ? "http://localhost:8000" // development api
-                : "https://api.yoton.club", // production api
+                : "https://api.monk.mn", // production api
     },
 };
 
