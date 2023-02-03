@@ -30,8 +30,8 @@ export default function CreateCourse() {
     const [subDesc, setSubDesc] = useState("");
     const [headerImageUrl, setHeaderImageUrl] = useState("");
     const [headerBannerUrl, setHeaderBannerUrl] = useState("");
-    const [price, setPrice] = useState(0);
-    const [amount, setAmount] = useState(0);
+    const [price, setPrice] = useState("");
+    const [amount, setAmount] = useState("");
     const [paid, setPaid] = useState(false);
 
     const router = useRouter();
@@ -112,7 +112,7 @@ export default function CreateCourse() {
                         <div className="min-h-screen container mx-auto flex px-2">
                             <div className=" w-80 border-r shrink-0 border-trueGray-700 pb-8 pt-8">
                                 <Link href="/createCourse">
-                                    <h5 className="pt-3">Overview</h5>
+                                    <h5 className="pt-3">Token багц үүсгэх</h5>
                                 </Link>
                             </div>
                             <div className="w-full p-8">
@@ -120,8 +120,8 @@ export default function CreateCourse() {
                                     className="hs-input w-full"
                                     type="text"
                                     placeholder="Гарчиг"
-                                    value={title}
                                     onChange={(e) => setTitle(e.target.value)}
+                                    value={title}
                                 />
 
                                 <input
@@ -141,7 +141,7 @@ export default function CreateCourse() {
                                 <input
                                     className="hs-input my-3 w-full"
                                     type="number"
-                                    placeholder="Богино тайлбар"
+                                    placeholder="Токены хэмжээ"
                                     value={amount}
                                     onChange={(e) => setAmount(e.target.value)}
                                 />

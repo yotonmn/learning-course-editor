@@ -12,6 +12,7 @@ import {
     Option,
     message,
     Upload,
+    Switch,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
@@ -88,11 +89,18 @@ export default function Detail() {
     const [headerBannerUrl, setHeaderBannerUrl] = useState(
         course?.course?.courseCoverUrl
     );
+    const [paid, setPaid] = useState(false);
     const [form] = Form.useForm();
+    const [price, setPrice] = useState(0);
     const editorRef = useRef(null);
 
     const handleChange = (event) => {
         setSelectedOption(event.target.value);
+    };
+
+    const onChange = (checked) => {
+        console.log(`switch to ${checked}`);
+        setPaid(checked);
     };
 
     const openNotificationWithIcon = (type, data) => {
@@ -128,12 +136,29 @@ export default function Detail() {
     };
 
     const save = async () => {
-        var object = {
-            courseName: title,
-            courseDescription: editorRef.current.getContent(),
-            courseThumbNailUrl: headerImageUrl,
-            courseCoverUrl: headerBannerUrl,
-        };
+        var object;
+        if (paid == true && price == 0) {
+            openNotificationWithIcon("error", "Enter price!");
+        }
+        if (paid == false) {
+            object = {
+                courseName: title,
+                courseDescription: editorRef.current.getContent(),
+                courseThumbNailUrl: headerImageUrl,
+                courseCoverUrl: headerBannerUrl,
+            };
+        } else {
+            object = {
+                courseName: title,
+                courseDescription: editorRef.current.getContent(),
+                courseThumbNailUrl: headerImageUrl,
+                courseCoverUrl: headerBannerUrl,
+                price: {
+                    MONK: price,
+                },
+            };
+        }
+
         const { data, status } = await updateCourse(id, object);
         if (status === 200) {
             openNotificationWithIcon("success", "Successfully updated course!");
@@ -151,8 +176,17 @@ export default function Detail() {
     const deleteCourse = async () => {
         const { data, status } = await deleteCourseById(id);
 
-        openNotificationWithIcon("success", "Successfully deleted course!");
-        router.push("/");
+        if (status === 200) {
+            openNotificationWithIcon("success", "Successfully deleted course!");
+            router.push("/");
+        } else {
+            openNotificationWithIcon(
+                "error",
+                data?.message || "Failed to delete course!"
+            );
+            // setLoading(false);
+        }
+
         // if (status === 200) {
         // } else {
         //     openNotificationWithIcon(
@@ -277,15 +311,39 @@ export default function Detail() {
 
                             <div className=" pb-3">
                                 {editMode ? (
-                                    <input
-                                        className="hs-input mt-3 w-full"
-                                        type="text"
-                                        placeholder="Banner image URL"
-                                        value={headerBannerUrl}
-                                        onChange={(e) =>
-                                            setHeaderBannerUrl(e.target.value)
-                                        }
-                                    />
+                                    <div className="w-full">
+                                        Thumbnail iamga
+                                        <input
+                                            className="hs-input mt-3 w-full"
+                                            type="text"
+                                            placeholder="Banner image URL"
+                                            value={headerBannerUrl}
+                                            onChange={(e) =>
+                                                setHeaderBannerUrl(
+                                                    e.target.value
+                                                )
+                                            }
+                                        />
+                                        <Space>
+                                            <Switch
+                                                onChange={onChange}
+                                                value={paid}
+                                                className="hs-input mt-3"
+                                            />{" "}
+                                            Үнэтэй курс
+                                        </Space>
+                                        {paid && (
+                                            <input
+                                                className="hs-input my-3 w-full"
+                                                type="number"
+                                                placeholder="Хичээлийн үнэ"
+                                                value={price}
+                                                onChange={(e) =>
+                                                    setPrice(e.target.value)
+                                                }
+                                            />
+                                        )}
+                                    </div>
                                 ) : (
                                     <div className="w-full">
                                         Banner Image
