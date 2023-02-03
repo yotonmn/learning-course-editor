@@ -87,7 +87,15 @@ export default function Navbar() {
             key: "/createCourse",
             label: (
                 <Link href="/createCourse" className="flex items-center">
-                    Create course
+                    Create Course
+                </Link>
+            ),
+        },
+        {
+            key: "/createProduct",
+            label: (
+                <Link href="/createProduct" className="flex items-center">
+                    Create Product
                 </Link>
             ),
         },
@@ -113,15 +121,13 @@ export default function Navbar() {
                             className="flex justify-center align-middle"
                         >
                             <img
-                                src="/img/logo.svg"
+                                src="/monk.png"
                                 alt="N"
                                 width="32"
                                 height="32"
-                                className="w-8 align-middle"
+                                className="w-8 align-middle rounded-full"
                             />
-                            <h3 className="pl-2 align-middle my-auto">
-                                build.mn
-                            </h3>
+                            <h3 className="pl-2 align-middle">monk.mn</h3>
                         </Link>
                     </div>
 

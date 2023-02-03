@@ -16,6 +16,7 @@ import {
     createSubCourse,
     updateChapter,
     deleteChapter,
+    mutateCourseById,
 } from "@lib/service";
 
 export default function CourseGroup({ visible, setVisible, course, id }) {
@@ -45,6 +46,7 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
                 "success",
                 "Successfully created chapter!"
             );
+            mutateCourseById(id);
             form.resetFields();
         } else {
             openNotificationWithIcon(
@@ -69,6 +71,7 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
                 "Successfully created chapter!"
             );
             form.resetFields();
+            mutateCourseById(id);
         } else {
             openNotificationWithIcon(
                 "error",
@@ -165,9 +168,9 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
                             className="justify-center flex"
                             onChange={(e) => setSubmitType(e.target.value)}
                         >
-                            <Radio.Button value="insert">Insert</Radio.Button>
-                            <Radio.Button value="update">Update</Radio.Button>
-                            <Radio.Button value="delete">Delete</Radio.Button>
+                            <Radio.Button value="insert">Үүсгэх</Radio.Button>
+                            <Radio.Button value="update">Шинэчлэх</Radio.Button>
+                            <Radio.Button value="delete">Устгах</Radio.Button>
                         </Radio.Group>
                     </Space>
                     {submitType == "delete" && (
@@ -306,6 +309,7 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
                                         ]}
                                         required
                                     >
+                                        <p className="text-white">Дараалал</p>
                                         <select
                                             placeholder="select"
                                             className=" hs-input-custom w-full px-4"
@@ -342,6 +346,9 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
                                             },
                                         ]}
                                     >
+                                        <p className="text-white">
+                                            Шинэчлээгүй бол хуучин нэр оруулах
+                                        </p>
                                         <Input
                                             className="hs-input"
                                             type="text"

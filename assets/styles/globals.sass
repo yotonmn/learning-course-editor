@@ -62,6 +62,7 @@ $gray-3: #D5DDE5
 $gray-2: #E7ECF2
 $gray-1: #2C2C2C
 $true-gray-800: #262626
+$true-gray-700: #404040
 $true-gray-800-hover: #404040
 $success: #219653
 $warning: #F2C94C
@@ -128,7 +129,7 @@ h6
   font-weight: $fontWeight-bold!important
   color: $white
   margin: 0
-  letter-spacing: $letterSpacing-4
+  // letter-spacing: $letterSpacing-4
 
 h1:last-child,
 h2:last-child,
@@ -153,8 +154,8 @@ h2
     line-height: $lineHeight-h4
 
 h3
-  font-size: $fontSize-h3!important
-  line-height: $lineHeight-h3!important
+  font-size: $fontSize-h3
+  line-height: $lineHeight-h3
 
 h4
   font-size: $fontSize-h4!important
@@ -232,7 +233,7 @@ a.hs-btn
   border-radius: 9999px
   font-family: $title-font
   font-weight: $fontWeight-medium
-  font-size: $fontSize-h5
+  font-size: $fontSize-h4
   line-height: $lineHeight-h5
   letter-spacing: $letterSpacing-4
 
@@ -246,16 +247,18 @@ a.hs-btn
   line-height: $lineHeight-h5
   letter-spacing: $letterSpacing-4
 
-.hs-markdown
-  .hljs
-    background: $true-gray-800
-    border-radius: 10px
-    color: $white
-  .hljs-string
-    color: $primary
-
 .hs-btn-compact
   height: 42px
+  line-height: 40px
+  border-radius: 9999px
+  font-family: $title-font
+  font-weight: $fontWeight-medium
+  font-size: $fontSize-h5
+  line-height: $lineHeight-h5
+  letter-spacing: $letterSpacing-4
+
+.hs-btn-big
+  padding: 20px
   line-height: 40px
   border-radius: 9999px
   font-family: $title-font
@@ -275,12 +278,19 @@ a.hs-btn
   &:hover, &:focus
     border-color: $primaryHover
     background: $primaryHover
+
 .ant-btn-primary:not(:disabled):hover
   border-color: $primaryHover
   background: $primaryHover
 .ant-btn-default:not(:disabled):hover
   border-color: $primaryHover
   background: $primaryHover
+  & >span
+
+.ant-btn-primary:disabled
+  border-color: transparent
+  background: #404040
+
 .ant-btn-text:not(:disabled):hover
   color: $primaryHover
 
@@ -292,6 +302,39 @@ a.hs-btn
     border-color: $primaryHover
     background: $primaryHover
     color: $white
+.hs-markdown
+  .hljs
+    background: $true-gray-800
+    border-radius: 10px
+    color: $white
+  .hljs-string
+    color: $primary
+
+  h2,
+  h3
+    margin: 30px 0
+  code
+    font-size: 0.9rem
+    margin: 0px 0 12px 0
+  p
+    margin: 20px 0
+  img
+    margin: 12px 0 0px 0
+  a
+    color: #1677ff
+    &:hover
+      color: #1677ff
+      text-decoration: underline
+  ol
+    list-style-type: decimal
+    padding: 2px 0 2px 40px
+  ul
+    list-style-type: disc
+    padding: 2px 0 2px 40px
+    // li
+    //   padding: 2px 0 2px 24px
+    // li::marker
+    //   padding: 2px 0 2px 24px
 
 .hs-btn-primary
   text-shadow: none
@@ -303,11 +346,24 @@ a.hs-btn
     line-height: $lineHeight-h5
     letter-spacing: $letterSpacing-4
 
+.hs-btn-primary-big
+  display: flex
+  text-shadow: none
+  justify-content: center
+  align-items: center
+  box-shadow: none
+  & >span
+    font-family: $title-font
+    font-weight: $fontWeight-medium
+    font-size: $fontSize-h4
+    line-height: $lineHeight-h5
+    letter-spacing: $letterSpacing-4
+
 .hs-btn-default
   display: flex
   justify-content: center
   align-items: center
-  border-color: $gray-3
+  border-color: $true-gray-700
   background-color: transparent
 
   & .customicon
@@ -323,43 +379,74 @@ a.hs-btn
     background-color: transparent
     border-color: $primary
 
+.hs-btn-default-big
+  display: flex
+  justify-content: center
+  align-items: center
+  border-color: $true-gray-700
+  background-color: transparent
+
+  & .customicon
+    display: inline-flex
+    margin-right: 8px
+    & >svg
+      height: 24px
+      width: 24px
+
+  & >span
+    color: $white
+    font-family: $title-font
+    font-weight: $fontWeight-medium
+    font-size: $fontSize-h4
+    line-height: $lineHeight-h5
+    letter-spacing: $letterSpacing-4
+  &:hover
+    background-color: transparent
+    border-color: $primary
+
 .hs-btn-text
+  padding: 0px
   color: $white
+  border-color: transparent
   &:hover, &:focus
     color: $primary
     background: transparent
+    border-color: transparent !important
+  ::after
+    border-color: transparent
+
+.hs-btn-text-left
+  display: flex
+  justify-content: start
+  align-items: center
+  padding: 0px
+  color: $white
+  border-color: transparent
+  &:hover, &:focus
+    color: $primary
+    background: transparent
+    border-color: transparent !important
+  ::after
+    border-color: transparent
+  & .customicon
+    display: inline-flex
+    margin-right: 8px
+    & >svg
+      height: 24px
+      width: 24px
 
 .hs-btn-white
   background-color: $white
   &:hover, &:focus
-    background-color: transparent
-    border-color: $white
+    color: $primary
     & >span
       color: $white
+  & >span
+    color: $gray-1
     // background: transparent
 
-/* tile uploaded pictures */
-.hs-upload-image
-  .ant-upload-wrapper
-    background-color: $white
-  .upload-list-inline .ant-upload-list-item
-    float: left
-    width: 200px
-    margin-inline-end: 8px
-
-  .ant-upload-rtl.upload-list-inline .ant-upload-list-item
-    float: right
-  .ant-upload-list-item-name
-    color: $white
-  .ant-affix .hs-header
-    background: rgba(0, 0, 0, 0.55)
-  .anticon-delete
-    color: #c21433 !important
-  .ant-upload-list-item-actions
-    color: $white
-
-  .picture
-    color: $white
+.ant-affix .hs-header
+  background: rgba(0, 0, 0, 0.55)
 // Header
 .hs-header
   background: transparent
@@ -521,6 +608,9 @@ a.hs-btn
     100%
       -webkit-transform: scale(1.2, 1.2)
       opacity: 0
+.hs-progress
+  .ant-progress-text
+    color: $white !important
 
 .hs-create-proposal
   & .card
@@ -677,6 +767,8 @@ a.hs-btn
   &:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus, &:-webkit-autofill:active
     background-color: red
     -webkit-text-fill-background-color: yellow !important
+  [type="file"]
+    background: $white
 
 .hs-input-custom
   background: $gray-1
@@ -861,7 +953,7 @@ a.hs-btn
 .hs-modal
   & .ant-modal-content
     border-radius: 20px
-    box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.08)
+    // box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.08)
     padding: 0
     background: transparent
     overflow: inherit
@@ -874,7 +966,7 @@ a.hs-btn
       left: -1px
       z-index: -2
       border-radius: 20px
-      background: linear-gradient(169deg, #434343 0%, rgba(33, 33, 33, 0) 85.3%)
+      // background: linear-gradient(169deg, #434343 0%, rgba(33, 33, 33, 0) 85.3%)
     &::after
       content: ""
       position: absolute
@@ -884,7 +976,7 @@ a.hs-btn
       left: 0
       z-index: -1
       border-radius: 19px
-      background: rgba(7,7,16,.7)
+      background: #262626
       backdrop-filter: blur(60px)
   & .ant-modal-body
     padding: 40px
@@ -904,10 +996,10 @@ a.hs-btn
   // & .ant-btn-default span
   //   color: $white
 
-.hs-modal-treasury
+.hs-modal-certConfirm
   & .ant-modal-content
     border-radius: 20px
-    box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.08)
+    // box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.08)
     padding: 0
     background: transparent
     overflow: inherit
@@ -920,7 +1012,7 @@ a.hs-btn
       left: -1px
       z-index: -2
       border-radius: 20px
-      background: linear-gradient(169deg, #434343 0%, rgba(33, 33, 33, 0) 85.3%)
+      // background: linear-gradient(169deg, #434343 0%, rgba(33, 33, 33, 0) 85.3%)
     &::after
       content: ""
       position: absolute
@@ -930,10 +1022,10 @@ a.hs-btn
       left: 0
       z-index: -1
       border-radius: 19px
-      background: rgba(7,7,16,.7)
+      background: rgba(38,38,38)
       backdrop-filter: blur(60px)
   & .ant-modal-body
-    padding: 40px
+    padding: 40px 40px 0 40px
   & .ant-modal-content
     border-radius: 8px
   & .ant-modal-header
@@ -947,10 +1039,8 @@ a.hs-btn
     display: inline-flex
     align-items: center
     justify-content: center
-  & a
-    color: white
-  & a:hover
-    color: #6252D9
+  // & .ant-btn-default span
+  //   color: $white
 
 .hs-proposal-detail
 
@@ -1873,8 +1963,8 @@ a.hs-btn
   width: 100%
 
 .hs-table
-  background: #131317
-  padding: 40px
+  background: rgba(38,38,38)
+  padding: 40px 40px 24px 40px
   border-radius: 24px
   overflow: hidden
   @media (max-width: 599px)
@@ -1897,7 +1987,7 @@ a.hs-btn
       transition: background 0.3s
       text-align: center
     & .ant-table-tbody > tr.ant-table-row:hover > td, & .ant-table-tbody > tr > td.ant-table-cell-row-hover
-      background: #5639C670
+      background: #404040
     & .ant-table-tbody > tr:last-child > td
       border-bottom-width: 0
     & .ant-table-tbody > tr > td:last-child,  & .ant-table-thead > tr > th:last-child

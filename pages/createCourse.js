@@ -12,6 +12,7 @@ import {
     notification,
     Select,
     Option,
+    Switch,
 } from "antd";
 import Link from "next/link";
 import {
@@ -28,18 +29,42 @@ export default function CreateCourse() {
     const [subDesc, setSubDesc] = useState("");
     const [headerImageUrl, setHeaderImageUrl] = useState("");
     const [headerBannerUrl, setHeaderBannerUrl] = useState("");
+    const [price, setPrice] = useState(0);
+    const [paid, setPaid] = useState(false);
 
     const router = useRouter();
     const editorRef = useRef(null);
 
+    const onChange = (checked) => {
+        console.log(`switch to ${checked}`);
+        setPaid(checked);
+    };
+
     const save = async () => {
-        var jsonData = {
-            courseName: title,
-            courseDescription: editorRef.current.getContent(),
-            courseImageUrl: headerImageUrl,
-            courseSubDescription: subDesc,
-            categoryId: 1,
-        };
+        var jsonData;
+        if (paid == true && price == 0) {
+            openNotificationWithIcon("error", "Enter price!");
+        }
+        if (paid == false) {
+            jsonData = {
+                courseName: title,
+                courseDescription: editorRef.current.getContent(),
+                courseImageUrl: headerImageUrl,
+                courseSubDescription: subDesc,
+                categoryId: 1,
+            };
+        } else {
+            jsonData = {
+                courseName: title,
+                courseDescription: editorRef.current.getContent(),
+                courseImageUrl: headerImageUrl,
+                courseSubDescription: subDesc,
+                categoryId: 1,
+                price: {
+                    MONK: price,
+                },
+            };
+        }
 
         const { data, status } = await createCourse(jsonData);
         console.log("🚀 ~ file: createCourse.js:70 ~ save ~ status", status);
@@ -133,6 +158,26 @@ export default function CreateCourse() {
                                     value={subDesc}
                                     onChange={(e) => setSubDesc(e.target.value)}
                                 />
+                                <Space className=" my-3">
+                                    <Switch
+                                        onChange={onChange}
+                                        value={paid}
+                                        className="hs-input"
+                                    />{" "}
+                                    Үнэтэй курс
+                                </Space>
+
+                                {paid && (
+                                    <input
+                                        className="hs-input my-3 w-full"
+                                        type="number"
+                                        placeholder="Хичээлийн үнэ"
+                                        value={price}
+                                        onChange={(e) =>
+                                            setPrice(e.target.value)
+                                        }
+                                    />
+                                )}
 
                                 <Editor
                                     className="mt-3"

@@ -19,6 +19,7 @@ import {
     useSubCourseById,
     updateSubCourse,
     deleteSubCourse,
+    mutateSubCourseById,
 } from "@lib/service";
 import { useState, useRef, useEffect } from "react";
 import dynamic from "next/dynamic";
@@ -72,10 +73,7 @@ export default function Detail() {
     const { data: course, loading: courseLoading } = useCourseById(id);
 
     const { data: subCourse } = useSubCourseById(subCourseId);
-    console.log(
-        "🚀 ~ file: [subCourseId].js:75 ~ Detail ~ subCourse",
-        subCourse
-    );
+
     const [airdropAmount, setAirdropAmount] = useState(
         subCourse?.data?.airdropAmount
     );
@@ -104,6 +102,14 @@ export default function Detail() {
     };
 
     const save = async () => {
+        if (!title) {
+            openNotificationWithIcon("error", "Please enter a title");
+            return;
+        }
+        if (!desc) {
+            openNotificationWithIcon("error", "Please enter a title");
+            return;
+        }
         var object = {
             subCourseName: title,
             content: desc,
@@ -114,13 +120,14 @@ export default function Detail() {
             //     },
             // },
         };
+        console.log(object);
         const { data, status } = await updateSubCourse(subCourseId, object);
         if (status === 200) {
             openNotificationWithIcon(
                 "success",
                 "Successfully updated sub course!"
             );
-
+            mutateSubCourseById(subCourseId);
             setEditMode(false);
         } else {
             openNotificationWithIcon(
@@ -156,7 +163,7 @@ export default function Detail() {
                 "success",
                 "Successfully updated sub course submission!"
             );
-
+            mutateSubCourseById(subCourseId);
             setEditMode(false);
         } else {
             openNotificationWithIcon(
@@ -174,7 +181,7 @@ export default function Detail() {
                 "success",
                 "Successfully deleted sub course!"
             );
-
+            mutateSubCourseById(subCourseId);
             setEditMode(false);
         } else {
             openNotificationWithIcon(

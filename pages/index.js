@@ -39,12 +39,12 @@ export default function Login() {
                                     {user?.userName}
                                 </h2>
                                 <p className=" text-lg leading-normal text-gray-500 lg:text-xl  dark:text-gray-300">
-                                    Full stack dev @company
+                                    Admin
                                 </p>
                             </Space>
                         </div>
                         <div>
-                            <Button
+                            {/* <Button
                                 type="default"
                                 className="hs-btn-default"
                                 icon={
@@ -54,7 +54,7 @@ export default function Login() {
                                 }
                             >
                                 Twitter
-                            </Button>
+                            </Button> */}
                         </div>
                     </Space>
                     <div className="my-16">

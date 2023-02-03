@@ -8,6 +8,7 @@ import {
     useAdminProfile,
     mutateAdminProfile,
 } from "@lib/hooks";
+import { getUserIdIfLogged, saveUserId } from "@lib/auth";
 import { clearToken, saveToken } from "@lib/auth";
 import { SessionContext } from "@lib/context";
 import "react-quill/dist/quill.snow.css";
@@ -15,12 +16,16 @@ import "highlight.js/styles/default.css";
 
 export default function App({ Component, pageProps }) {
     const router = useRouter();
+    const userIdLocal = getUserIdIfLogged();
     const [authorized, setAuthorized] = useState(false);
-    const { data: user, loading } = useUserProfile();
+    const [userId, setUserId] = useState("");
+    const { data: user, loading } = useUserProfile(userId || userIdLocal);
 
     const signIn = async (data) => {
+        setUserId(data.data.id);
         await saveToken(data);
-        await mutateUserProfile();
+        await saveUserId(data.data.id);
+        await mutateUserProfile(data.data.id);
         setAuthorized(true);
     };
 

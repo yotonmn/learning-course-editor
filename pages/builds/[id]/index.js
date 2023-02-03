@@ -21,6 +21,7 @@ import {
     createSubCourse,
     updateCourse,
     deleteCourseById,
+    mutateCourseById,
 } from "@lib/service";
 import { useState, useMemo, useRef, useEffect } from "react";
 import { getAccessToken, getRefreshToken, saveToken } from "@lib/auth";
@@ -115,6 +116,7 @@ export default function Detail() {
                 "success",
                 "Successfully created sub course!"
             );
+            mutateCourseById(id);
             form.resetFields();
         } else {
             openNotificationWithIcon(
@@ -135,7 +137,7 @@ export default function Detail() {
         const { data, status } = await updateCourse(id, object);
         if (status === 200) {
             openNotificationWithIcon("success", "Successfully updated course!");
-
+            mutateCourseById(id);
             setEditMode(false);
         } else {
             openNotificationWithIcon(

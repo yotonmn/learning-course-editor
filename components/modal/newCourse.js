@@ -15,6 +15,7 @@ import {
     createSubCourse,
     useSubCourseById,
     updateSubCourse,
+    mutateCourseById,
 } from "@lib/service";
 import { useState } from "react";
 
@@ -42,6 +43,7 @@ export default function NewCourse({ visible, setVisible, course, id }) {
                 "Successfully created sub course!"
             );
             form.resetFields();
+            mutateCourseById(id);
         } else {
             openNotificationWithIcon(
                 "error",
