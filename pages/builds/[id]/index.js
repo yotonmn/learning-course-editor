@@ -40,30 +40,6 @@ const QuillNoSSRWrapper = dynamic(import("react-quill"), {
     loading: () => <p>Loading ...</p>,
 });
 
-// const modules = {
-//     toolbar: [
-//         [{ header: "1" }, { header: "2" }, { font: [] }],
-//         [{ size: [] }],
-//         ["bold", "italic", "underline", "strike", "blockquote"],
-//         [
-//             { list: "ordered" },
-//             { list: "bullet" },
-//             { indent: "-1" },
-//             { indent: "+1" },
-//         ],
-//         ["link", "image", "video", "code-block"],
-//         ["clean"],
-//     ],
-
-//     clipboard: {
-//         // toggle to add extra line breaks when pasting HTML:
-//         matchVisual: false,
-//     },
-//     handlers: {
-//         image: imageHandler,
-//     },
-// };
-
 export default function Detail() {
     const router = useRouter();
     const id = +router.query.id;
@@ -89,9 +65,11 @@ export default function Detail() {
     const [headerBannerUrl, setHeaderBannerUrl] = useState(
         course?.course?.courseCoverUrl
     );
+    const [givebackToken, setGivebackToken] = useState("");
+
     const [paid, setPaid] = useState(false);
     const [form] = Form.useForm();
-    const [price, setPrice] = useState(0);
+    const [price, setPrice] = useState("");
     const editorRef = useRef(null);
 
     const handleChange = (event) => {
@@ -333,15 +311,28 @@ export default function Detail() {
                                             Үнэтэй курс
                                         </Space>
                                         {paid && (
-                                            <input
-                                                className="hs-input my-3 w-full"
-                                                type="number"
-                                                placeholder="Хичээлийн үнэ"
-                                                value={price}
-                                                onChange={(e) =>
-                                                    setPrice(e.target.value)
-                                                }
-                                            />
+                                            <Space>
+                                                <input
+                                                    className="hs-input my-3 w-full"
+                                                    type="number"
+                                                    placeholder="Хичээлийн үнэ"
+                                                    value={price}
+                                                    onChange={(e) =>
+                                                        setPrice(e.target.value)
+                                                    }
+                                                />
+                                                <input
+                                                    className="hs-input my-3 w-full"
+                                                    type="number"
+                                                    placeholder="Буцааж өгөг дүн"
+                                                    value={givebackToken}
+                                                    onChange={(e) =>
+                                                        setGivebackToken(
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                />
+                                            </Space>
                                         )}
                                     </div>
                                 ) : (

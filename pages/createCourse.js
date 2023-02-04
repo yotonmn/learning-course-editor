@@ -29,8 +29,9 @@ export default function CreateCourse() {
     const [subDesc, setSubDesc] = useState("");
     const [headerImageUrl, setHeaderImageUrl] = useState("");
     const [headerBannerUrl, setHeaderBannerUrl] = useState("");
-    const [price, setPrice] = useState(0);
+    const [price, setPrice] = useState("");
     const [paid, setPaid] = useState(false);
+    const [givebackToken, setGivebackToken] = useState("");
 
     const router = useRouter();
     const editorRef = useRef(null);
@@ -42,8 +43,11 @@ export default function CreateCourse() {
 
     const save = async () => {
         var jsonData;
-        if (paid == true && price == 0) {
+        if (paid == true && price == "") {
             openNotificationWithIcon("error", "Enter price!");
+        }
+        if (paid == true && givebackToken == "") {
+            openNotificationWithIcon("error", "Enter giveback token!");
         }
         if (paid == false) {
             jsonData = {
@@ -62,6 +66,10 @@ export default function CreateCourse() {
                 categoryId: 1,
                 price: {
                     MONK: price,
+                },
+                givebackToken: {
+                    tokenAddress: "0xc177Ed5d20Ffc501683B33D48a91F27F4abe85cb",
+                    amount: givebackToken,
                 },
             };
         }
@@ -168,15 +176,26 @@ export default function CreateCourse() {
                                 </Space>
 
                                 {paid && (
-                                    <input
-                                        className="hs-input my-3 w-full"
-                                        type="number"
-                                        placeholder="Хичээлийн үнэ"
-                                        value={price}
-                                        onChange={(e) =>
-                                            setPrice(e.target.value)
-                                        }
-                                    />
+                                    <Space>
+                                        <input
+                                            className="hs-input my-3 w-full"
+                                            type="number"
+                                            placeholder="Хичээлийн үнэ"
+                                            value={price}
+                                            onChange={(e) =>
+                                                setPrice(e.target.value)
+                                            }
+                                        />
+                                        <input
+                                            className="hs-input my-3 w-full"
+                                            type="number"
+                                            placeholder="Буцааж өгөх дүн"
+                                            value={givebackToken}
+                                            onChange={(e) =>
+                                                setGivebackToken(e.target.value)
+                                            }
+                                        />
+                                    </Space>
                                 )}
 
                                 <Editor
