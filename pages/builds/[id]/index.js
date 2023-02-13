@@ -225,7 +225,7 @@ export default function Detail() {
                                         }
                                     />
                                 ) : (
-                                    <h2 className="max-w-2xl mt-3 text-3xl font-bold leading-snug tracking-tight text-gray-800 lg:leading-tight lg:text-4xl dark:text-white">
+                                    <h2 className="max-w-2xl mt-3 text-3xl font-bold leading-snug tracking-tight  lg:leading-tight lg:text-4xl text-white">
                                         {course?.course?.courseName}
                                     </h2>
                                 )}
@@ -245,7 +245,7 @@ export default function Detail() {
                                         }
                                     />
                                 ) : (
-                                    <p className="max-w-2xl mt-3 text-3xl font-bold leading-snug tracking-tight text-gray-800 lg:leading-tight lg:text-4xl dark:text-white">
+                                    <p className="max-w-2xl mt-3 text-3xl font-bold leading-snug tracking-tight  lg:leading-tight lg:text-4xl text-white">
                                         {course?.course?.courseSubDescription}
                                     </p>
                                 )}
