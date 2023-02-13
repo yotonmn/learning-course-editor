@@ -16,7 +16,7 @@ export default function LeftMenu({ detail, id, course }) {
     const router = useRouter();
     return (
         <div className="w-80 border-r shrink-0 border-trueGray-700 pb-8 pt-8 max-h-screen overflow-y-auto">
-            <Space direction="vertical" size={30}>
+            <Space direction="vertical" size={30} className="w-full mb-40">
                 <Image
                     src={
                         course?.courseThumbNailUrl ||
