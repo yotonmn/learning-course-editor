@@ -35,10 +35,10 @@ export default function Login() {
                                 className="rounded-full mt-[-40px] h-24  relative"
                             />
                             <Space direction="vertical" size="7">
-                                <h2 className=" mt-3 text-3xl font-bold leading-snug tracking-tight text-gray-800 lg:leading-tight lg:text-4xl dark:text-white">
+                                <h2 className=" mt-3 text-3xl font-bold leading-snug tracking-tight lg:leading-tight lg:text-4xl dark:text-white">
                                     {user?.userName}
                                 </h2>
-                                <p className=" text-lg leading-normal text-gray-500 lg:text-xl  dark:text-gray-300">
+                                <p className=" text-lg leading-normal  lg:text-xl  dark:text-gray-300">
                                     Admin
                                 </p>
                             </Space>
@@ -58,7 +58,7 @@ export default function Login() {
                         </div>
                     </Space>
                     <div className="my-16">
-                        <h3 className=" mb-8 text-3xl font-bold leading-snug tracking-tight text-gray-800 lg:leading-tight lg:text-4xl dark:text-white">
+                        <h3 className=" mb-8 text-3xl font-bold leading-snug tracking-tight lg:leading-tight lg:text-4xl dark:text-white">
                             Created courses
                         </h3>
                         <div className="grid xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 grid-cols-1 gap-6">

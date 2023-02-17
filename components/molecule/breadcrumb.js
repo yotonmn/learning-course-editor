@@ -29,7 +29,7 @@ export default function Breadcrumb({ courseName }) {
 
             <li>
                 <a href="#" class="block transition hover:text-gray-700">
-                    <h3 className="max-w-2xl  text-3xl font-bold leading-snug tracking-tight lg:leading-tight lg:text-4xl dark:text-white">
+                    <h3 className="max-w-2xl  text-3xl font-bold leading-snug tracking-tight lg:leading-tight lg:text-4xl text-white">
                         {courseName}
                     </h3>
                 </a>

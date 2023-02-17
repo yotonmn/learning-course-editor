@@ -12,7 +12,7 @@ export default function Builds(props) {
             <div className="container mx-auto ">
                 <Navbar />
                 <div className="pt-16 pb-8">
-                    <h2 className=" mb-3 text-3xl font-bold leading-snug tracking-tight text-gray-800 lg:leading-tight lg:text-4xl dark:text-white">
+                    <h2 className=" mb-3 text-3xl font-bold leading-snug tracking-tight  lg:leading-tight lg:text-4xl text-white">
                         What&apos;s next to build
                     </h2>
                 </div>

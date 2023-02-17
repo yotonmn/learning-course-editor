@@ -131,37 +131,6 @@ export default function Navbar() {
                         </Link>
                     </div>
 
-                    {/* <div className="hs-nav-center hidden md:block">
-                        <ul className="flex items-center gap-6 text-sm">
-                            <li>
-                                <Link
-                                    className="text-gray-500 transition hover:text-gray-500/75 dark:text-white dark:hover:text-white/75 text-lg "
-                                    href="/builds"
-                                >
-                                    Builds
-                                </Link>
-                            </li>
-
-                            <li>
-                                <Link
-                                    className="text-gray-500 transition hover:text-gray-500/75 dark:text-white dark:hover:text-white/75 text-lg"
-                                    href="/createCourse"
-                                >
-                                    Create course
-                                </Link>
-                            </li>
-
-                            <li>
-                                <Link
-                                    className="text-gray-500 transition hover:text-gray-500/75 dark:text-white dark:hover:text-white/75 text-lg"
-                                    href="/"
-                                >
-                                    Docs
-                                </Link>
-                            </li>
-                        </ul>
-                    </div> */}
-
                     <div className="flex items-center justify-end">
                         {/* <Button
                             type="primary"
