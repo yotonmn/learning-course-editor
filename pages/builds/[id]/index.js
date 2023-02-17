@@ -123,14 +123,14 @@ export default function Detail() {
         if (paid == false) {
             object = {
                 courseName: title,
-                courseDescription: editorRef.current.getContent(),
+                courseDescription: desc,
                 courseThumbNailUrl: headerImageUrl,
                 courseCoverUrl: headerBannerUrl,
             };
         } else {
             object = {
                 courseName: title,
-                courseDescription: editorRef.current.getContent(),
+                courseDescription: desc,
                 courseThumbNailUrl: headerImageUrl,
                 courseCoverUrl: headerBannerUrl,
                 price: {
