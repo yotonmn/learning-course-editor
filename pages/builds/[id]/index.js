@@ -27,8 +27,8 @@ import {
 import { useState, useMemo, useRef, useEffect } from "react";
 import { getAccessToken, getRefreshToken, saveToken } from "@lib/auth";
 import dynamic from "next/dynamic";
-import CourseGroup from "@components/modal/courseGroup";
 import NewCourse from "@components/modal/newCourse";
+import CourseGroup from "@components/modal/courseGroup";
 import Breadcrumb from "@components/molecule/breadcrumb";
 import LeftMenu from "@components/molecule/LeftMenu";
 import SERVER_SETTINGS from "@lib/serverSettings";
@@ -365,7 +365,10 @@ export default function Detail() {
                                         className="hs-input w-full "
                                         rows="300"
                                         cols="50"
-                                        value={desc || subCourse?.data?.content}
+                                        value={
+                                            desc ||
+                                            course?.course?.courseDescription
+                                        }
                                         onChange={(e) =>
                                             setDesc(e.target.value)
                                         }
