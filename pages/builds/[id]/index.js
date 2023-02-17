@@ -34,6 +34,7 @@ import LeftMenu from "@components/molecule/LeftMenu";
 import SERVER_SETTINGS from "@lib/serverSettings";
 import { Editor } from "@tinymce/tinymce-react";
 import Image from "next/image";
+import { marked } from "marked";
 
 const QuillNoSSRWrapper = dynamic(import("react-quill"), {
     ssr: false,
