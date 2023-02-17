@@ -53,6 +53,7 @@ export default function Detail() {
 
     const { data: course, loading: courseLoading } = useCourseById(id);
 
+    const markDown = course?.course?.courseDescription;
     const [title, setTitle] = useState(course?.course?.courseName);
     const [desc, setDesc] = useState(course?.course?.courseDescription);
     const [subDesc, setSubDesc] = useState(
