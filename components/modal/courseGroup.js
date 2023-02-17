@@ -82,7 +82,7 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
     };
 
     const onFinishUpdate = async (values) => {
-        console.log(values);
+        console.log("-----", values);
         var object;
         if (!values.chapterName && !order) {
             openNotificationWithIcon("error", "Failed to update chapter!");
@@ -318,11 +318,6 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
                                             }
                                             value={order}
                                         >
-                                            {/* <option
-                                                value={createdoOrder.length + 1}
-                                            >
-                                                Хамгийн сүүлд харуулах
-                                            </option> */}
                                             {createdoOrder.map(
                                                 (item, index) => (
                                                     <option
@@ -346,9 +341,6 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
                                             },
                                         ]}
                                     >
-                                        <p className="text-white">
-                                            Шинэчлээгүй бол хуучин нэр оруулах
-                                        </p>
                                         <Input
                                             className="hs-input"
                                             type="text"
