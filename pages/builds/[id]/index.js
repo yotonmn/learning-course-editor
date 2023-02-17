@@ -358,74 +358,25 @@ export default function Detail() {
 
                             <div className="mt-3">
                                 {editMode ? (
-                                    <Editor
-                                        apiKey="6txtqjyoakt14laf9nspotnfhh3a39axurq82x8ego0yq4h1"
-                                        onInit={(evt, editor) =>
-                                            (editorRef.current = editor)
+                                    <textarea
+                                        id="w3review"
+                                        className="hs-input w-full "
+                                        rows="300"
+                                        cols="50"
+                                        value={desc || subCourse?.data?.content}
+                                        onChange={(e) =>
+                                            setDesc(e.target.value)
                                         }
-                                        initialValue={
-                                            desc ||
-                                            course?.course?.courseDescription
-                                        }
-                                        init={{
-                                            height: 500,
-                                            menubar: false,
-                                            plugins: [
-                                                "advlist",
-                                                "autolink",
-                                                "lists",
-                                                "link",
-                                                "image",
-                                                "charmap",
-                                                "preview",
-                                                "anchor",
-                                                "searchreplace",
-                                                "visualblocks",
-                                                "code",
-                                                "fullscreen",
-                                                "insertdatetime",
-                                                "media",
-                                                "table",
-                                                "code",
-                                                "help",
-                                                "wordcount",
-                                                "codesample",
-                                                "code",
-                                            ],
-                                            codesample_languages: [
-                                                {
-                                                    text: "HTML/XML",
-                                                    value: "markup",
-                                                },
-                                                {
-                                                    text: "JavaScript",
-                                                    value: "javascript",
-                                                },
-                                                { text: "CSS", value: "css" },
-                                                { text: "PHP", value: "php" },
-                                                { text: "Ruby", value: "ruby" },
-                                                {
-                                                    text: "Python",
-                                                    value: "python",
-                                                },
-                                                { text: "Java", value: "java" },
-                                                { text: "C", value: "c" },
-                                                { text: "C#", value: "csharp" },
-                                                { text: "C++", value: "cpp" },
-                                            ],
-                                            toolbar:
-                                                "undo redo | blocks | " +
-                                                "bold italic forecolor | alignleft aligncenter " +
-                                                "alignright alignjustify | bullist numlist outdent indent | " +
-                                                "removeformat | help |" +
-                                                "codesample " +
-                                                "image",
-                                            content_style:
-                                                "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
-                                        }}
                                     />
                                 ) : (
-                                    <p>{course?.course?.courseDescription}</p>
+                                    markDown && (
+                                        <div
+                                            dangerouslySetInnerHTML={{
+                                                __html: marked(markDown),
+                                            }}
+                                            className="hs-markdown"
+                                        ></div>
+                                    )
                                 )}
                             </div>
                         </div>
