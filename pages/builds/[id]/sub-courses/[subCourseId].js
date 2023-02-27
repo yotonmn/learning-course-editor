@@ -1,6 +1,6 @@
-import React from "react";
-import Navbar from "@components/navbar";
-import Footer from "@components/footer";
+import React from 'react';
+import Navbar from '@components/navbar';
+import Footer from '@components/footer';
 import {
     Button,
     Modal,
@@ -10,46 +10,46 @@ import {
     notification,
     Descriptions,
     Radio,
-} from "antd";
-import { useRouter } from "next/router";
+} from 'antd';
+import { useRouter } from 'next/router';
 import {
     useCourseById,
     createChapter,
     createSubCourse,
-    useSubCourseById,
+    useSubCourseByIdAdmin,
     updateSubCourse,
     deleteSubCourse,
     mutateSubCourseById,
-} from "@lib/service";
-import { useState, useRef, useEffect } from "react";
-import dynamic from "next/dynamic";
-import CourseGroup from "@components/modal/courseGroup";
-import NewCourse from "@components/modal/newCourse";
-import Breadcrumb from "@components/molecule/breadcrumb";
-import LeftMenu from "@components/molecule/LeftMenu";
-import { Editor } from "@tinymce/tinymce-react";
-import ReactMarkdown from "react-markdown";
-import hljs from "highlight.js";
-import { marked } from "marked";
+} from '@lib/service';
+import { useState, useRef, useEffect } from 'react';
+import dynamic from 'next/dynamic';
+import CourseGroup from '@components/modal/courseGroup';
+import NewCourse from '@components/modal/newCourse';
+import Breadcrumb from '@components/molecule/breadcrumb';
+import LeftMenu from '@components/molecule/LeftMenu';
+import { Editor } from '@tinymce/tinymce-react';
+import ReactMarkdown from 'react-markdown';
+import hljs from 'highlight.js';
+import { marked } from 'marked';
 
-const QuillNoSSRWrapper = dynamic(import("react-quill"), {
+const QuillNoSSRWrapper = dynamic(import('react-quill'), {
     ssr: false,
     loading: () => <p>Loading ...</p>,
 });
 
 const modules = {
     toolbar: [
-        [{ header: "1" }, { header: "2" }, { font: [] }],
+        [{ header: '1' }, { header: '2' }, { font: [] }],
         [{ size: [] }],
-        ["bold", "italic", "underline", "strike", "blockquote"],
+        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
         [
-            { list: "ordered" },
-            { list: "bullet" },
-            { indent: "-1" },
-            { indent: "+1" },
+            { list: 'ordered' },
+            { list: 'bullet' },
+            { indent: '-1' },
+            { indent: '+1' },
         ],
-        ["link", "image", "video", "code-block"],
-        ["clean"],
+        ['link', 'image', 'video', 'code-block'],
+        ['clean'],
     ],
     clipboard: {
         // toggle to add extra line breaks when pasting HTML:
@@ -72,7 +72,7 @@ export default function Detail() {
 
     const { data: course, loading: courseLoading } = useCourseById(id);
 
-    const { data: subCourse } = useSubCourseById(subCourseId);
+    const { data: subCourse } = useSubCourseByIdAdmin(subCourseId);
 
     const [airdropAmount, setAirdropAmount] = useState(
         subCourse?.data?.airdropAmount
@@ -96,18 +96,18 @@ export default function Detail() {
 
     const openNotificationWithIcon = (type, data) => {
         notification[type]({
-            message: type === "success" ? "success" : "error",
+            message: type === 'success' ? 'success' : 'error',
             description: data,
         });
     };
 
     const save = async () => {
         if (!title) {
-            openNotificationWithIcon("error", "Please enter a title");
+            openNotificationWithIcon('error', 'Please enter a title');
             return;
         }
         if (!desc) {
-            openNotificationWithIcon("error", "Please enter a title");
+            openNotificationWithIcon('error', 'Please enter a title');
             return;
         }
         var object = {
@@ -124,15 +124,15 @@ export default function Detail() {
         const { data, status } = await updateSubCourse(subCourseId, object);
         if (status === 200) {
             openNotificationWithIcon(
-                "success",
-                "Successfully updated sub course!"
+                'success',
+                'Successfully updated sub course!'
             );
             mutateSubCourseById(subCourseId);
             setEditMode(false);
         } else {
             openNotificationWithIcon(
-                "error",
-                data?.message || "Failed to update sub course!"
+                'error',
+                data?.message || 'Failed to update sub course!'
             );
             // setLoading(false);
         }
@@ -141,9 +141,9 @@ export default function Detail() {
     const saveValidation = async () => {
         if (!submitType || !submissionDesc) {
             openNotificationWithIcon(
-                "error",
+                'error',
 
-                "Failed to update sub course submission! Insert data"
+                'Failed to update sub course submission! Insert data'
             );
         }
         var object = {
@@ -160,15 +160,15 @@ export default function Detail() {
         const { data, status } = await updateSubCourse(subCourseId, object);
         if (status === 200) {
             openNotificationWithIcon(
-                "success",
-                "Successfully updated sub course submission!"
+                'success',
+                'Successfully updated sub course submission!'
             );
             mutateSubCourseById(subCourseId);
             setEditMode(false);
         } else {
             openNotificationWithIcon(
-                "error",
-                data?.message || "Failed to update sub course submission!"
+                'error',
+                data?.message || 'Failed to update sub course submission!'
             );
             // setLoading(false);
         }
@@ -178,15 +178,15 @@ export default function Detail() {
         const { data, status } = await deleteSubCourse(subCourseId);
         if (status === 200) {
             openNotificationWithIcon(
-                "success",
-                "Successfully deleted sub course!"
+                'success',
+                'Successfully deleted sub course!'
             );
             mutateSubCourseById(subCourseId);
             setEditMode(false);
         } else {
             openNotificationWithIcon(
-                "error",
-                data?.message || "Failed to delete sub course!"
+                'error',
+                data?.message || 'Failed to delete sub course!'
             );
             // setLoading(false);
         }
@@ -194,7 +194,7 @@ export default function Detail() {
 
     const addContent = (value) => {
         console.log(
-            "🚀 ~ file: createCourse.js:79 ~ addContent ~ value",
+            '🚀 ~ file: createCourse.js:79 ~ addContent ~ value',
             value
         );
 
@@ -277,7 +277,7 @@ export default function Detail() {
                         <div className="justify-start flex">
                             <div className="flex w-80 border-r border-trueGray-700">
                                 <div className="my-auto flex space-x-4">
-                                    {" "}
+                                    {' '}
                                     <Button
                                         type="primary"
                                         className="hs-btn hs-btn-primary  "
@@ -320,7 +320,7 @@ export default function Detail() {
                                         className="hs-btn hs-btn-primary my-auto "
                                         onClick={() => setEditMode(true)}
                                     >
-                                        Edit{" "}
+                                        Edit{' '}
                                     </Button>
                                     <Button
                                         type="default"
@@ -343,7 +343,7 @@ export default function Detail() {
                         </div>
                     </div>
                 </div>
-            </div>{" "}
+            </div>{' '}
             <CourseGroup
                 visible={isModalOpenGroup}
                 setVisible={() => setIsModalOpenGroup(false)}
