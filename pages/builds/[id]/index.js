@@ -1,6 +1,6 @@
-import React from "react";
-import Navbar from "@components/navbar";
-import Footer from "@components/footer";
+import React from 'react';
+import Navbar from '@components/navbar';
+import Footer from '@components/footer';
 import {
     Button,
     Modal,
@@ -13,9 +13,9 @@ import {
     message,
     Upload,
     Switch,
-} from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-import { useRouter } from "next/router";
+} from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+import { useRouter } from 'next/router';
 import {
     useCourseById,
     createChapter,
@@ -23,20 +23,20 @@ import {
     updateCourse,
     deleteCourseById,
     mutateCourseById,
-} from "@lib/service";
-import { useState, useMemo, useRef, useEffect } from "react";
-import { getAccessToken, getRefreshToken, saveToken } from "@lib/auth";
-import dynamic from "next/dynamic";
-import NewCourse from "@components/modal/newCourse";
-import CourseGroup from "@components/modal/courseGroup";
-import Breadcrumb from "@components/molecule/breadcrumb";
-import LeftMenu from "@components/molecule/LeftMenu";
-import SERVER_SETTINGS from "@lib/serverSettings";
-import { Editor } from "@tinymce/tinymce-react";
-import Image from "next/image";
-import { marked } from "marked";
+} from '@lib/service';
+import { useState, useMemo, useRef, useEffect } from 'react';
+import { getAccessToken, getRefreshToken, saveToken } from '@lib/auth';
+import dynamic from 'next/dynamic';
+import NewCourse from '@components/modal/newCourse';
+import CourseGroup from '@components/modal/courseGroup';
+import Breadcrumb from '@components/molecule/breadcrumb';
+import LeftMenu from '@components/molecule/LeftMenu';
+import SERVER_SETTINGS from '@lib/serverSettings';
+import { Editor } from '@tinymce/tinymce-react';
+import Image from 'next/image';
+import { marked } from 'marked';
 
-const QuillNoSSRWrapper = dynamic(import("react-quill"), {
+const QuillNoSSRWrapper = dynamic(import('react-quill'), {
     ssr: false,
     loading: () => <p>Loading ...</p>,
 });
@@ -67,11 +67,11 @@ export default function Detail() {
     const [headerBannerUrl, setHeaderBannerUrl] = useState(
         course?.course?.courseCoverUrl
     );
-    const [givebackToken, setGivebackToken] = useState("");
+    const [givebackToken, setGivebackToken] = useState('');
 
     const [paid, setPaid] = useState(false);
     const [form] = Form.useForm();
-    const [price, setPrice] = useState("");
+    const [price, setPrice] = useState('');
     const editorRef = useRef(null);
 
     const handleChange = (event) => {
@@ -85,7 +85,7 @@ export default function Detail() {
 
     const openNotificationWithIcon = (type, data) => {
         notification[type]({
-            message: type === "success" ? "success" : "error",
+            message: type === 'success' ? 'success' : 'error',
             description: data,
         });
     };
@@ -101,15 +101,15 @@ export default function Detail() {
 
         if (status === 200) {
             openNotificationWithIcon(
-                "success",
-                "Successfully created sub course!"
+                'success',
+                'Successfully created sub course!'
             );
             mutateCourseById(id);
             form.resetFields();
         } else {
             openNotificationWithIcon(
-                "error",
-                data?.message || "Failed to create sub course!"
+                'error',
+                data?.message || 'Failed to create sub course!'
             );
             // setLoading(false);
         }
@@ -118,18 +118,18 @@ export default function Detail() {
     const save = async () => {
         var object;
         if (paid == true && price == 0) {
-            openNotificationWithIcon("error", "Enter price!");
+            openNotificationWithIcon('error', 'Enter price!');
         }
         if (paid == false) {
             object = {
-                courseName: title,
+                courseName: title || course?.course?.courseName,
                 courseDescription: desc,
                 courseThumbNailUrl: headerImageUrl,
                 courseCoverUrl: headerBannerUrl,
             };
         } else {
             object = {
-                courseName: title,
+                courseName: title || course?.course?.courseName,
                 courseDescription: desc,
                 courseThumbNailUrl: headerImageUrl,
                 courseCoverUrl: headerBannerUrl,
@@ -141,13 +141,13 @@ export default function Detail() {
 
         const { data, status } = await updateCourse(id, object);
         if (status === 200) {
-            openNotificationWithIcon("success", "Successfully updated course!");
+            openNotificationWithIcon('success', 'Successfully updated course!');
             mutateCourseById(id);
             setEditMode(false);
         } else {
             openNotificationWithIcon(
-                "error",
-                data?.message || "Failed to update course!"
+                'error',
+                data?.message || 'Failed to update course!'
             );
             // setLoading(false);
         }
@@ -157,12 +157,12 @@ export default function Detail() {
         const { data, status } = await deleteCourseById(id);
 
         if (status === 200) {
-            openNotificationWithIcon("success", "Successfully deleted course!");
-            router.push("/");
+            openNotificationWithIcon('success', 'Successfully deleted course!');
+            router.push('/');
         } else {
             openNotificationWithIcon(
-                "error",
-                data?.message || "Failed to delete course!"
+                'error',
+                data?.message || 'Failed to delete course!'
             );
             // setLoading(false);
         }
@@ -179,7 +179,7 @@ export default function Detail() {
 
     const addContent = (value) => {
         console.log(
-            "🚀 ~ file: createCourse.js:79 ~ addContent ~ value",
+            '🚀 ~ file: createCourse.js:79 ~ addContent ~ value',
             value
         );
 
@@ -276,7 +276,7 @@ export default function Detail() {
                                                 src={
                                                     course?.course
                                                         ?.courseThumbNailUrl ||
-                                                    "https://source.unsplash.com/random/300x300/?2"
+                                                    'https://source.unsplash.com/random/300x300/?2'
                                                 }
                                                 height={130}
                                                 width={300}
@@ -309,7 +309,7 @@ export default function Detail() {
                                                 onChange={onChange}
                                                 value={paid}
                                                 className="hs-input mt-3"
-                                            />{" "}
+                                            />{' '}
                                             Үнэтэй курс
                                         </Space>
                                         {paid && (
@@ -345,7 +345,7 @@ export default function Detail() {
                                                 src={
                                                     course?.course
                                                         ?.courseCoverUrl ||
-                                                    "https://source.unsplash.com/random/300x300/?2"
+                                                    'https://source.unsplash.com/random/300x300/?2'
                                                 }
                                                 height={260}
                                                 width={300}
@@ -392,7 +392,7 @@ export default function Detail() {
                         <div className="justify-start flex">
                             <div className="flex w-80 border-r border-trueGray-700">
                                 <div className="my-auto flex space-x-4">
-                                    {" "}
+                                    {' '}
                                     <Button
                                         type="primary"
                                         className="hs-btn hs-btn-primary  "
@@ -435,7 +435,7 @@ export default function Detail() {
                                         className="hs-btn hs-btn-primary my-auto "
                                         onClick={() => setEditMode(true)}
                                     >
-                                        Edit{" "}
+                                        Edit{' '}
                                     </Button>
                                     <Button
                                         type="default"
@@ -449,7 +449,7 @@ export default function Detail() {
                         </div>
                     </div>
                 </div>
-            </div>{" "}
+            </div>{' '}
             <Modal
                 open={isModalOpen}
                 onCancel={() => setIsModalOpen(false)}
@@ -477,7 +477,7 @@ export default function Detail() {
                                 rules={[
                                     {
                                         required: true,
-                                        message: "Enter Title",
+                                        message: 'Enter Title',
                                     },
                                 ]}
                                 required
@@ -496,7 +496,7 @@ export default function Detail() {
                                 rules={[
                                     {
                                         required: true,
-                                        message: "Enter Chapter",
+                                        message: 'Enter Chapter',
                                     },
                                 ]}
                                 required
@@ -508,8 +508,8 @@ export default function Detail() {
                                     className=" hs-input-custom w-full px-4"
                                 >
                                     <option value="⬇️ Select a chapters ⬇️">
-                                        {" "}
-                                        -- Select a chapter --{" "}
+                                        {' '}
+                                        -- Select a chapter --{' '}
                                     </option>
                                     {course?.course?.courseChapter?.map(
                                         (item, index) => (
