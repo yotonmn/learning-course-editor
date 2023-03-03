@@ -12,6 +12,7 @@ import {
     Option,
     message,
     Upload,
+    Popconfirm,
     Switch,
 } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
@@ -437,13 +438,21 @@ export default function Detail() {
                                     >
                                         Edit{' '}
                                     </Button>
-                                    <Button
-                                        type="default"
-                                        className="hs-btn hs-btn-text my-auto "
-                                        onClick={() => deleteCourse()}
+                                    <Popconfirm
+                                        title="Delete the task"
+                                        description="Are you sure to delete this task?"
+                                        onConfirm={deleteCourse}
+                                        // onCancel={cancel}
+                                        okText="Yes"
+                                        cancelText="No"
                                     >
-                                        Delete this course
-                                    </Button>
+                                        <Button
+                                            type="default"
+                                            className="hs-btn hs-btn-text my-auto"
+                                        >
+                                            Delete this course
+                                        </Button>
+                                    </Popconfirm>
                                 </Space>
                             )}
                         </div>
