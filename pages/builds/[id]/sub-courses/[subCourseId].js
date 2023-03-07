@@ -373,10 +373,10 @@ export default function Detail() {
                         className="justify-center flex"
                         onChange={(e) => setSubmitType(e.target.value)}
                     >
+                        <Radio.Button value="TEXT">Text</Radio.Button>
                         <Radio.Button value="LINK">Link</Radio.Button>
                         <Radio.Button value="IMAGE">Image</Radio.Button>
                         <Radio.Button value="FILE">File</Radio.Button>
-                        {/* <Radio.Button value="d">Chengdu</Radio.Button> */}
                     </Radio.Group>
                     <input
                         className="hs-input w-full"
