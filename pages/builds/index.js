@@ -1,8 +1,8 @@
-import React from "react";
-import Navbar from "@components/navbar";
-import Footer from "@components/footer";
-import Courses from "@components/courses";
-import CourseCard from "@components/courseCard";
+import React from 'react';
+import Navbar from '@components/navbar';
+import Footer from '@components/footer';
+import Courses from '@components/courses';
+import CourseCard from '@components/courseCard';
 
 export default function Builds(props) {
     const data = props.lessons;
@@ -31,16 +31,4 @@ export default function Builds(props) {
             </div>
         </div>
     );
-}
-
-import fsPromises from "fs/promises";
-import path from "path";
-export async function getStaticProps() {
-    const filePath = path.join(process.cwd(), "lessons.json");
-    const jsonData = await fsPromises.readFile(filePath);
-    const objectData = JSON.parse(jsonData);
-
-    return {
-        props: objectData,
-    };
 }

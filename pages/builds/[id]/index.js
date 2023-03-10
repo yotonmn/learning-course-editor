@@ -127,6 +127,7 @@ export default function Detail() {
                 courseDescription: desc,
                 courseThumbNailUrl: headerImageUrl,
                 courseCoverUrl: headerBannerUrl,
+                courseSubDescription: subDesc,
             };
         } else {
             object = {
@@ -134,6 +135,7 @@ export default function Detail() {
                 courseDescription: desc,
                 courseThumbNailUrl: headerImageUrl,
                 courseCoverUrl: headerBannerUrl,
+                courseSubDescription: subDesc,
                 price: {
                     MONK: price,
                 },
@@ -248,7 +250,7 @@ export default function Detail() {
                                         }
                                     />
                                 ) : (
-                                    <p className="max-w-2xl mt-3 text-3xl font-bold leading-snug tracking-tight  lg:leading-tight lg:text-4xl text-white">
+                                    <p className="max-w-2xl mt-3  leading-snug tracking-tight  lg:leading-tight  text-white">
                                         {course?.course?.courseSubDescription}
                                     </p>
                                 )}

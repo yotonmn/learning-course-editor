@@ -1,5 +1,5 @@
-import Link from "next/link";
-import { useRouter } from "next/router";
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import {
     Affix,
     Anchor,
@@ -12,15 +12,15 @@ import {
     Row,
     Space,
     Typography,
-} from "antd";
-import Hamburger from "@assets/svgs/menu.svg";
-import ChevronDown from "@assets/svgs/bx-chevron-down.svg";
-import Logo from "@assets/svgs/logo.svg";
-import { useSession } from "@lib/context";
-import { useTranslation } from "react-i18next";
-import UserCircle from "@assets/svgs/user-circle.svg";
-import Wallet from "@assets/svgs/wallet.svg";
-import LogOut from "@assets/svgs/log-out-circle.svg";
+} from 'antd';
+import Hamburger from '@assets/svgs/menu.svg';
+import ChevronDown from '@assets/svgs/bx-chevron-down.svg';
+import Logo from '@assets/svgs/logo.svg';
+import { useSession } from '@lib/context';
+import { useTranslation } from 'react-i18next';
+import UserCircle from '@assets/svgs/user-circle.svg';
+import Wallet from '@assets/svgs/wallet.svg';
+import LogOut from '@assets/svgs/log-out-circle.svg';
 
 export default function Navbar() {
     const { user, signOut, admin } = useSession();
@@ -30,15 +30,15 @@ export default function Navbar() {
 
     const handleSignOut = async (evt) => {
         await signOut();
-        router.push("/");
+        router.push('/');
     };
     const pushToLogin = () => {
-        router.push("/");
+        router.push('/');
     };
 
     const mobileMenu = [
         {
-            key: "/builds",
+            key: '/builds',
             label: (
                 <Link href="/builds" className="flex items-center">
                     Courses
@@ -46,7 +46,7 @@ export default function Navbar() {
             ),
         },
         {
-            key: "/createCourse",
+            key: '/createCourse',
             label: (
                 <Link href="/createCourse" className="flex items-center">
                     Create course
@@ -54,7 +54,7 @@ export default function Navbar() {
             ),
         },
         {
-            key: "/dao",
+            key: '/dao',
             label: (
                 <Link href="/dao" className="flex items-center">
                     Docs
@@ -63,10 +63,10 @@ export default function Navbar() {
         },
 
         !user && {
-            key: "/",
+            key: '/',
             label: (
                 <Link href="/login" className="flex items-center">
-                    {t("login")}
+                    {t('login')}
                 </Link>
             ),
         },
@@ -84,7 +84,7 @@ export default function Navbar() {
         //     label: <Link href="/editProfile">Edit profile</Link>,
         // },
         {
-            key: "/createCourse",
+            key: '/createCourse',
             label: (
                 <Link href="/createCourse" className="flex items-center">
                     Create Course
@@ -92,7 +92,7 @@ export default function Navbar() {
             ),
         },
         {
-            key: "/createProduct",
+            key: '/createProduct',
             label: (
                 <Link href="/createProduct" className="flex items-center">
                     Create Product
@@ -100,8 +100,16 @@ export default function Navbar() {
             ),
         },
         {
-            key: "logout",
-            label: t("logout"),
+            key: '/createProduct',
+            label: (
+                <Link href="/updateProduct" className="flex items-center">
+                    Update product
+                </Link>
+            ),
+        },
+        {
+            key: 'logout',
+            label: t('logout'),
             // icon: <LogOut />,
             onClick: handleSignOut,
         },
@@ -160,7 +168,7 @@ export default function Navbar() {
                                         src={
                                             user?.picture
                                                 ? user.picture
-                                                : "https://source.boringavatars.com/"
+                                                : 'https://source.boringavatars.com/'
                                         }
                                     />
                                     <ChevronDown />
@@ -173,7 +181,7 @@ export default function Navbar() {
                                         className="hs-btn hs-btn-primary"
                                         type="primary"
                                     >
-                                        {t("login")}
+                                        {t('login')}
                                     </Button>
                                 </Link>
                             </div>

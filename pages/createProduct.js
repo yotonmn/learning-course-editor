@@ -1,8 +1,8 @@
-import React from "react";
-import Navbar from "@components/navbar";
-import Footer from "@components/footer";
-import { useState, useRef } from "react";
-import dynamic from "next/dynamic";
+import React from 'react';
+import Navbar from '@components/navbar';
+import Footer from '@components/footer';
+import { useState, useRef } from 'react';
+import dynamic from 'next/dynamic';
 import {
     Button,
     Modal,
@@ -13,25 +13,25 @@ import {
     Select,
     Option,
     Switch,
-} from "antd";
-import Link from "next/link";
+} from 'antd';
+import Link from 'next/link';
 import {
     createCourse,
     useCoursesByCategory,
     getCoursesByCategory,
     createProduct,
-} from "@lib/service";
-import { useRouter } from "next/router";
-import { Editor } from "@tinymce/tinymce-react";
+} from '@lib/service';
+import { useRouter } from 'next/router';
+import { Editor } from '@tinymce/tinymce-react';
 
 export default function CreateCourse() {
-    const [title, setTitle] = useState("");
-    const [desc, setDesc] = useState("");
-    const [subDesc, setSubDesc] = useState("");
-    const [headerImageUrl, setHeaderImageUrl] = useState("");
-    const [headerBannerUrl, setHeaderBannerUrl] = useState("");
-    const [price, setPrice] = useState("");
-    const [amount, setAmount] = useState("");
+    const [title, setTitle] = useState('');
+    const [desc, setDesc] = useState('');
+    const [subDesc, setSubDesc] = useState('');
+    const [headerImageUrl, setHeaderImageUrl] = useState('');
+    const [headerBannerUrl, setHeaderBannerUrl] = useState('');
+    const [price, setPrice] = useState('');
+    const [amount, setAmount] = useState('');
     const [paid, setPaid] = useState(false);
 
     const router = useRouter();
@@ -45,7 +45,7 @@ export default function CreateCourse() {
     const save = async () => {
         var jsonData;
         if (amount == 0 && price == 0) {
-            openNotificationWithIcon("error", "Enter price!");
+            openNotificationWithIcon('error', 'Enter price!');
         }
 
         jsonData = {
@@ -57,19 +57,19 @@ export default function CreateCourse() {
         };
 
         const { data, status } = await createProduct(jsonData);
-        console.log("🚀 ~ file: createCourse.js:70 ~ save ~ status", status);
-        console.log("🚀 ~ file: createCourse.js:70 ~ save ~ data", data);
+        console.log('🚀 ~ file: createCourse.js:70 ~ save ~ status', status);
+        console.log('🚀 ~ file: createCourse.js:70 ~ save ~ data', data);
 
         // console.log("🚀 ~ file: createCourse.js:100 ~ save ~ dataNew", dataNew);
         if (status === 200) {
-            openNotificationWithIcon("success", "Successfully created course!");
+            openNotificationWithIcon('success', 'Successfully created course!');
             // jumpToLatestCourse(data.courseId);
             // setEmailSent(true);
             // setLoading(false);
         } else {
             openNotificationWithIcon(
-                "error",
-                data?.message || "Failed to create course!"
+                'error',
+                data?.message || 'Failed to create course!'
             );
             // setLoading(false);
         }
@@ -77,7 +77,7 @@ export default function CreateCourse() {
 
     const jumpToLatestCourse = async (id) => {
         router.push({
-            pathname: "/builds/[id]",
+            pathname: '/builds/[id]',
             query: {
                 id,
             },
@@ -86,7 +86,7 @@ export default function CreateCourse() {
 
     const openNotificationWithIcon = (type, data) => {
         notification[type]({
-            message: type === "success" ? "success" : "error",
+            message: type === 'success' ? 'success' : 'error',
             description: data,
         });
     };
@@ -111,9 +111,9 @@ export default function CreateCourse() {
                     <div className="min-h-screen border-t border-trueGray-700 ">
                         <div className="min-h-screen container mx-auto flex px-2">
                             <div className=" w-80 border-r shrink-0 border-trueGray-700 pb-8 pt-8">
-                                <Link href="/createCourse">
-                                    <h5 className="pt-3">Token багц үүсгэх</h5>
-                                </Link>
+                                {/* <Link href="/createCourse"> */}
+                                <h5 className="pt-3">Token багц үүсгэх</h5>
+                                {/* </Link> */}
                             </div>
                             <div className="w-full p-8">
                                 <input
@@ -153,7 +153,7 @@ export default function CreateCourse() {
                             <div className="justify-start flex">
                                 <div className="flex w-80 border-r border-trueGray-700">
                                     <div className="my-auto flex space-x-4">
-                                        {" "}
+                                        {' '}
                                     </div>
                                 </div>
                             </div>
