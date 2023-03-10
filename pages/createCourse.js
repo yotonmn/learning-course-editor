@@ -1,8 +1,8 @@
-import React from "react";
-import Navbar from "@components/navbar";
-import Footer from "@components/footer";
-import { useState, useRef } from "react";
-import dynamic from "next/dynamic";
+import React from 'react';
+import Navbar from '@components/navbar';
+import Footer from '@components/footer';
+import { useState, useRef } from 'react';
+import dynamic from 'next/dynamic';
 import {
     Button,
     Modal,
@@ -13,25 +13,25 @@ import {
     Select,
     Option,
     Switch,
-} from "antd";
-import Link from "next/link";
+} from 'antd';
+import Link from 'next/link';
 import {
     createCourse,
     useCoursesByCategory,
     getCoursesByCategory,
-} from "@lib/service";
-import { useRouter } from "next/router";
-import { Editor } from "@tinymce/tinymce-react";
+} from '@lib/service';
+import { useRouter } from 'next/router';
+import { Editor } from '@tinymce/tinymce-react';
 
 export default function CreateCourse() {
-    const [title, setTitle] = useState("");
-    const [desc, setDesc] = useState("");
-    const [subDesc, setSubDesc] = useState("");
-    const [headerImageUrl, setHeaderImageUrl] = useState("");
-    const [headerBannerUrl, setHeaderBannerUrl] = useState("");
-    const [price, setPrice] = useState("");
+    const [title, setTitle] = useState('');
+    const [desc, setDesc] = useState('');
+    const [subDesc, setSubDesc] = useState('');
+    const [headerImageUrl, setHeaderImageUrl] = useState('');
+    const [headerBannerUrl, setHeaderBannerUrl] = useState('');
+    const [price, setPrice] = useState('');
     const [paid, setPaid] = useState(false);
-    const [givebackToken, setGivebackToken] = useState("");
+    const [givebackToken, setGivebackToken] = useState('');
 
     const router = useRouter();
     const editorRef = useRef(null);
@@ -43,11 +43,11 @@ export default function CreateCourse() {
 
     const save = async () => {
         var jsonData;
-        if (paid == true && price == "") {
-            openNotificationWithIcon("error", "Enter price!");
+        if (paid == true && price == '') {
+            openNotificationWithIcon('error', 'Enter price!');
         }
-        if (paid == true && givebackToken == "") {
-            openNotificationWithIcon("error", "Enter giveback token!");
+        if (paid == true && givebackToken == '') {
+            openNotificationWithIcon('error', 'Enter giveback token!');
         }
         if (paid == false) {
             jsonData = {
@@ -68,26 +68,26 @@ export default function CreateCourse() {
                     MONK: price,
                 },
                 givebackToken: {
-                    tokenAddress: "0xc177Ed5d20Ffc501683B33D48a91F27F4abe85cb",
+                    tokenAddress: '0xc177Ed5d20Ffc501683B33D48a91F27F4abe85cb',
                     amount: givebackToken,
                 },
             };
         }
 
         const { data, status } = await createCourse(jsonData);
-        console.log("🚀 ~ file: createCourse.js:70 ~ save ~ status", status);
-        console.log("🚀 ~ file: createCourse.js:70 ~ save ~ data", data);
+        console.log('🚀 ~ file: createCourse.js:70 ~ save ~ status', status);
+        console.log('🚀 ~ file: createCourse.js:70 ~ save ~ data', data);
 
         // console.log("🚀 ~ file: createCourse.js:100 ~ save ~ dataNew", dataNew);
         if (status === 200) {
-            openNotificationWithIcon("success", "Successfully created course!");
+            openNotificationWithIcon('success', 'Successfully created course!');
             jumpToLatestCourse(data.courseId);
             // setEmailSent(true);
             // setLoading(false);
         } else {
             openNotificationWithIcon(
-                "error",
-                data?.message || "Failed to create course!"
+                'error',
+                data?.message || 'Failed to create course!'
             );
             // setLoading(false);
         }
@@ -95,7 +95,7 @@ export default function CreateCourse() {
 
     const jumpToLatestCourse = async (id) => {
         router.push({
-            pathname: "/builds/[id]",
+            pathname: '/builds/[id]',
             query: {
                 id,
             },
@@ -104,7 +104,7 @@ export default function CreateCourse() {
 
     const openNotificationWithIcon = (type, data) => {
         notification[type]({
-            message: type === "success" ? "success" : "error",
+            message: type === 'success' ? 'success' : 'error',
             description: data,
         });
     };
@@ -171,7 +171,7 @@ export default function CreateCourse() {
                                         onChange={onChange}
                                         value={paid}
                                         className="hs-input"
-                                    />{" "}
+                                    />{' '}
                                     Үнэтэй курс
                                 </Space>
 
@@ -209,57 +209,57 @@ export default function CreateCourse() {
                                         height: 500,
                                         menubar: false,
                                         plugins: [
-                                            "advlist",
-                                            "autolink",
-                                            "lists",
-                                            "link",
-                                            "image",
-                                            "charmap",
-                                            "preview",
-                                            "anchor",
-                                            "searchreplace",
-                                            "visualblocks",
-                                            "code",
-                                            "fullscreen",
-                                            "insertdatetime",
-                                            "media",
-                                            "table",
-                                            "code",
-                                            "help",
-                                            "wordcount",
-                                            "codesample",
-                                            "code",
+                                            'advlist',
+                                            'autolink',
+                                            'lists',
+                                            'link',
+                                            'image',
+                                            'charmap',
+                                            'preview',
+                                            'anchor',
+                                            'searchreplace',
+                                            'visualblocks',
+                                            'code',
+                                            'fullscreen',
+                                            'insertdatetime',
+                                            'media',
+                                            'table',
+                                            'code',
+                                            'help',
+                                            'wordcount',
+                                            'codesample',
+                                            'code',
                                         ],
                                         codesample_languages: [
                                             {
-                                                text: "HTML/XML",
-                                                value: "markup",
+                                                text: 'HTML/XML',
+                                                value: 'markup',
                                             },
                                             {
-                                                text: "JavaScript",
-                                                value: "javascript",
+                                                text: 'JavaScript',
+                                                value: 'javascript',
                                             },
-                                            { text: "CSS", value: "css" },
-                                            { text: "PHP", value: "php" },
-                                            { text: "Ruby", value: "ruby" },
+                                            { text: 'CSS', value: 'css' },
+                                            { text: 'PHP', value: 'php' },
+                                            { text: 'Ruby', value: 'ruby' },
                                             {
-                                                text: "Python",
-                                                value: "python",
+                                                text: 'Python',
+                                                value: 'python',
                                             },
-                                            { text: "Java", value: "java" },
-                                            { text: "C", value: "c" },
-                                            { text: "C#", value: "csharp" },
-                                            { text: "C++", value: "cpp" },
+                                            { text: 'Java', value: 'java' },
+                                            { text: 'C', value: 'c' },
+                                            { text: 'C#', value: 'csharp' },
+                                            { text: 'C++', value: 'cpp' },
                                         ],
                                         toolbar:
-                                            "undo redo | blocks | " +
-                                            "bold italic forecolor | alignleft aligncenter " +
-                                            "alignright alignjustify | bullist numlist outdent indent | " +
-                                            "removeformat | help |" +
-                                            "codesample " +
-                                            "image",
+                                            'undo redo | blocks | ' +
+                                            'bold italic forecolor | alignleft aligncenter ' +
+                                            'alignright alignjustify | bullist numlist outdent indent | ' +
+                                            'removeformat | help |' +
+                                            'codesample ' +
+                                            'image',
                                         content_style:
-                                            "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+                                            'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
                                     }}
                                 />
                             </div>
@@ -270,7 +270,7 @@ export default function CreateCourse() {
                             <div className="justify-start flex">
                                 <div className="flex w-80 border-r border-trueGray-700">
                                     <div className="my-auto flex space-x-4">
-                                        {" "}
+                                        {' '}
                                     </div>
                                 </div>
                             </div>

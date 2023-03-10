@@ -125,16 +125,20 @@ export default function Detail() {
             object = {
                 courseName: title || course?.course?.courseName,
                 courseDescription: desc,
-                courseThumbNailUrl: headerImageUrl,
-                courseCoverUrl: headerBannerUrl,
+                courseThumbNailUrl:
+                    headerImageUrl || course?.course?.courseThumbNailUrl,
+                courseCoverUrl:
+                    headerBannerUrl || course?.course?.courseCoverUrl,
                 courseSubDescription: subDesc,
             };
         } else {
             object = {
                 courseName: title || course?.course?.courseName,
                 courseDescription: desc,
-                courseThumbNailUrl: headerImageUrl,
-                courseCoverUrl: headerBannerUrl,
+                courseThumbNailUrl:
+                    headerImageUrl || course?.course?.courseThumbNailUrl,
+                courseCoverUrl:
+                    headerBannerUrl || course?.course?.courseCoverUrl,
                 courseSubDescription: subDesc,
                 price: {
                     MONK: price,
