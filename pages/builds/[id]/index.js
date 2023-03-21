@@ -68,6 +68,13 @@ export default function Detail() {
     const [headerBannerUrl, setHeaderBannerUrl] = useState(
         course?.course?.courseCoverUrl
     );
+
+    useEffect(() => {
+        if (course) {
+            setHeaderImageUrl(course?.course?.courseThumbNailUrl);
+            setHeaderBannerUrl(course?.course?.courseCoverUrl);
+        }
+    }, [course]);
     const [givebackToken, setGivebackToken] = useState('');
 
     const [paid, setPaid] = useState(false);
@@ -299,7 +306,7 @@ export default function Detail() {
                             <div className=" pb-3">
                                 {editMode ? (
                                     <div className="w-full">
-                                        Thumbnail iamga
+                                        Thumbnail image
                                         <input
                                             className="hs-input mt-3 w-full"
                                             type="text"
