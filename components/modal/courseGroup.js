@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
     Button,
     Modal,
@@ -8,8 +8,8 @@ import {
     notification,
     Radio,
     Switch,
-} from "antd";
-import { useState } from "react";
+} from 'antd';
+import { useState } from 'react';
 import {
     useCourseById,
     createChapter,
@@ -17,15 +17,16 @@ import {
     updateChapter,
     deleteChapter,
     mutateCourseById,
-} from "@lib/service";
+} from '@lib/service';
 
 export default function CourseGroup({ visible, setVisible, course, id }) {
     const [deleteMode, setDeleteMode] = useState(false);
-    const [submitType, setSubmitType] = useState("");
+    const [submitType, setSubmitType] = useState('');
     const [createdoOrder, setCreatedOrder] = useState([]);
-    const [currentChapter, setCurrentChapter] = useState("");
+    const [currentChapter, setCurrentChapter] = useState('');
 
-    const [order, setOrder] = useState(0);
+    const [order, setOrder] = useState(1);
+    console.log('🚀 ~ file: courseGroup.js:29 ~ CourseGroup ~ order:', order);
 
     const [form] = Form.useForm();
 
@@ -43,49 +44,49 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
 
         if (status === 200) {
             openNotificationWithIcon(
-                "success",
-                "Successfully created chapter!"
+                'success',
+                'Successfully created chapter!'
             );
             mutateCourseById(id);
             form.resetFields();
         } else {
             openNotificationWithIcon(
-                "error",
-                data?.error || "Failed to create course!"
+                'error',
+                data?.error || 'Failed to create course!'
             );
             // setLoading(false);
         }
     };
 
     const onFinishDelete = async (values) => {
-        console.log(values);
-        // var object = {
-        //     chapterName: values.title,
-        // };
+        var object = {
+            chapterName: values.chapterName,
+        };
+        console.log('-----', object);
 
-        const { data, status } = await deleteChapter(id, values);
+        const { data, status } = await deleteChapter(id, object);
 
         if (status === 200) {
             openNotificationWithIcon(
-                "success",
-                "Successfully created chapter!"
+                'success',
+                'Successfully deleted chapter!'
             );
             form.resetFields();
             mutateCourseById(id);
         } else {
             openNotificationWithIcon(
-                "error",
-                data?.error || "Failed to create course!"
+                'error',
+                data?.error || 'Failed to create course!'
             );
             // setLoading(false);
         }
     };
 
     const onFinishUpdate = async (values) => {
-        console.log("-----", values);
+        console.log('-----', values);
         var object;
         if (!values.chapterName && !order) {
-            openNotificationWithIcon("error", "Failed to update chapter!");
+            openNotificationWithIcon('error', 'Failed to update chapter!');
             return;
         }
         if (values.chapterName === undefined) {
@@ -93,7 +94,7 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
                 chapterName: values.chapter,
                 order: order,
             };
-        } else if (values.order === undefined) {
+        } else if (order === undefined) {
             object = {
                 chapterName: values.chapter,
                 newChapterName: values.chapterName,
@@ -111,14 +112,15 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
 
         if (status === 200) {
             openNotificationWithIcon(
-                "success",
-                "Successfully updated chapter!"
+                'success',
+                'Successfully updated chapter!'
             );
             form.resetFields();
+            mutateCourseById(id);
         } else {
             openNotificationWithIcon(
-                "error",
-                data?.error || "Failed to update course!"
+                'error',
+                data?.error || 'Failed to update course!'
             );
             // setLoading(false);
         }
@@ -146,7 +148,7 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
 
     const openNotificationWithIcon = (type, data) => {
         notification[type]({
-            message: type === "success" ? "success" : "error",
+            message: type === 'success' ? 'success' : 'error',
             description: data,
         });
     };
@@ -173,7 +175,7 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
                             <Radio.Button value="delete">Устгах</Radio.Button>
                         </Radio.Group>
                     </Space>
-                    {submitType == "delete" && (
+                    {submitType == 'delete' && (
                         <Form
                             className="hs-row"
                             form={form}
@@ -187,15 +189,15 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
                                 direction="vertical"
                                 size={16}
                             >
-                                {" "}
+                                {' '}
                                 <h5>Устгах бүлэг сонгох</h5>
                                 <Form.Item
-                                    name="chapter"
+                                    name="chapterName"
                                     className="hs-form-item"
                                     rules={[
                                         {
                                             required: true,
-                                            message: "Enter Chapter",
+                                            message: 'Enter Chapter',
                                         },
                                     ]}
                                     required
@@ -205,8 +207,8 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
                                         className=" hs-input-custom w-full px-4"
                                     >
                                         <option value="⬇️ Select a chapters ⬇️">
-                                            {" "}
-                                            -- Select a chapter --{" "}
+                                            {' '}
+                                            -- Select a chapter --{' '}
                                         </option>
                                         {course?.course?.courseChapter?.map(
                                             (item, index) => (
@@ -246,11 +248,11 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
                                     >
                                         Delete
                                     </Button>
-                                </Form.Item>{" "}
+                                </Form.Item>{' '}
                             </Space>
                         </Form>
                     )}
-                    {submitType == "update" && (
+                    {submitType == 'update' && (
                         <Form
                             className="hs-row"
                             form={form}
@@ -264,7 +266,7 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
                                 direction="vertical"
                                 size={16}
                             >
-                                {" "}
+                                {' '}
                                 <h5>Шинэчлэх бүлэг сонгох</h5>
                                 <Form.Item
                                     name="chapter"
@@ -272,7 +274,7 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
                                     rules={[
                                         {
                                             required: true,
-                                            message: "Enter Chapter",
+                                            message: 'Enter Chapter',
                                         },
                                     ]}
                                     required
@@ -283,8 +285,8 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
                                         onChange={(e) => getOrder(e)}
                                     >
                                         <option value="⬇️ Select a chapters ⬇️">
-                                            {" "}
-                                            -- Select a chapter --{" "}
+                                            {' '}
+                                            -- Select a chapter --{' '}
                                         </option>
                                         {course?.course?.courseChapter?.map(
                                             (item, index) => (
@@ -304,7 +306,7 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
                                         className="hs-form-item"
                                         rules={[
                                             {
-                                                message: "Enter Order",
+                                                message: 'Enter Order',
                                             },
                                         ]}
                                         required
@@ -337,7 +339,7 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
                                         className="hs-form-item"
                                         rules={[
                                             {
-                                                message: "Enter Title",
+                                                message: 'Enter Title',
                                             },
                                         ]}
                                     >
@@ -358,11 +360,11 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
                                     >
                                         Update
                                     </Button>
-                                </Form.Item>{" "}
+                                </Form.Item>{' '}
                             </Space>
                         </Form>
                     )}
-                    {submitType == "insert" && (
+                    {submitType == 'insert' && (
                         <Form
                             className="hs-row"
                             form={form}
@@ -382,7 +384,7 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
                                     rules={[
                                         {
                                             required: true,
-                                            message: "Enter Title",
+                                            message: 'Enter Title',
                                         },
                                     ]}
                                     required
