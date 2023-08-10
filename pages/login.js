@@ -1,6 +1,6 @@
-import React from "react";
-import Navbar from "@components/navbar";
-import Footer from "@components/footer";
+import React from 'react';
+import Navbar from '@components/navbar';
+import Footer from '@components/footer';
 import {
     Button,
     Divider,
@@ -9,21 +9,22 @@ import {
     Space,
     Typography,
     Input,
-} from "antd";
-import { useEffect, useState, useContext } from "react";
-import Link from "next/link";
-import { useTranslation } from "react-i18next";
-import FacebookButton from "@components/common/FacebookButton";
-import GoogleButton from "@components/common/GoogleButton";
-import { GoogleOAuthProvider } from "@react-oauth/google";
-import { signInManual } from "@lib/auth";
-import { SessionContext } from "@lib/context";
-import { useRouter } from "next/router";
+} from 'antd';
+import { useEffect, useState, useContext } from 'react';
+import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
+import FacebookButton from '@components/common/FacebookButton';
+import GoogleButton from '@components/common/GoogleButton';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import { signInManual } from '@lib/auth';
+import { SessionContext } from '@lib/context';
+import { useRouter } from 'next/router';
+import { signInManualAdmin } from '@lib/auth';
 const { Title, Paragraph } = Typography;
 
 const GOOGLE_CLIENT_ID =
     process.env.GOOGLE_CLIENT_ID ||
-    "761687243021-tb0bskb31t21eqgr8qogap0evs44knk0.apps.googleusercontent.com";
+    '761687243021-tb0bskb31t21eqgr8qogap0evs44knk0.apps.googleusercontent.com';
 
 export default function Login() {
     const [form] = Form.useForm();
@@ -33,27 +34,28 @@ export default function Login() {
     const { user, signIn } = useContext(SessionContext);
     useEffect(() => {
         // user && router.push('/profile/wallet')
-        user && router.back();
+        user && router.push('/');
     }, [user, router]);
 
     const openNotificationWithIcon = (type, data) => {
         notification[type]({
-            message: type === "success" ? t("success") : t("error"),
+            message: type === 'success' ? t('success') : t('error'),
             description: data,
         });
     };
 
     const onFinish = async (values) => {
         setLoading(true);
-        const data = await signInManual(values);
-
-        if (!data?.success && !data?.jwToken) {
-            const errorTxt = await data.json();
-
+        const data = await signInManualAdmin(values);
+        //data buruu uchir sign in hj chadku
+        //todo aldaa zasah
+        if (!data?.success) {
+            // const errorTxt = await data.json();
+            console.log('error');
             setLoading(false);
-            openNotificationWithIcon("error", errorTxt);
+            openNotificationWithIcon('error', 'error');
         } else {
-            openNotificationWithIcon("success", t("welcome"));
+            openNotificationWithIcon('success', t('welcome'));
             await signIn(data);
         }
     };
@@ -67,9 +69,7 @@ export default function Login() {
             <div className="flex flex-col max-w-md p-6 rounded-md sm:p-10  dark:text-gray-100 h-full mt-[-50px] mx-auto">
                 <div className="align-middle  my-auto ">
                     <div className="mb-8 text-center">
-                        <h2 className="my-3 text-4xl font-bold">
-                            Welcome back
-                        </h2>
+                        <h2 className="my-3 text-4xl font-bold">Admin login</h2>
                         <p className="text-sm dark:text-gray-400">
                             Sign in to access your account
                         </p>
@@ -90,13 +90,13 @@ export default function Login() {
                                 className="w-full"
                             >
                                 <Form.Item
-                                    label={t("email")}
+                                    label={t('email')}
                                     name="email"
                                     className="hs-form-item"
                                     rules={[
                                         {
                                             required: true,
-                                            message: t("enterYourEmail"),
+                                            message: t('enterYourEmail'),
                                         },
                                     ]}
                                     required
@@ -109,13 +109,13 @@ export default function Login() {
                                 </Form.Item>
                                 <div className="hs-form-item-pass">
                                     <Form.Item
-                                        label={t("password")}
+                                        label={t('password')}
                                         className="hs-form-item"
                                         name="password"
                                         rules={[
                                             {
                                                 required: true,
-                                                message: t("enterYourPass"),
+                                                message: t('enterYourPass'),
                                             },
                                         ]}
                                         required
@@ -131,7 +131,7 @@ export default function Login() {
                                             className="hs-btn-text"
                                             type="text"
                                         >
-                                            {t("forgotPassword")}?
+                                            {t('forgotPassword')}?
                                         </Button>
                                     </Link>
                                 </div>
@@ -143,10 +143,10 @@ export default function Login() {
                                         block
                                         loading={loading}
                                     >
-                                        {t("login")}
+                                        {t('login')}
                                     </Button>
                                 </Form.Item>
-                                <Form.Item className="hs-form-item">
+                                {/* <Form.Item className="hs-form-item">
                                     <Divider className="capitalize">or</Divider>
                                 </Form.Item>
                                 <Form.Item className="hs-form-item">
@@ -159,17 +159,17 @@ export default function Login() {
                                     >
                                         <GoogleButton />
                                     </GoogleOAuthProvider>
-                                </Form.Item>
+                                </Form.Item> */}
                                 <Form.Item className="hs-form-item hs-form-item-other">
                                     <Paragraph className="paragraph2">
-                                        {t("newUser")}?
+                                        {t('newUser')}?
                                     </Paragraph>
-                                    <Link href="/register">
+                                    <Link href="/adminRegister">
                                         <Button
                                             className="hs-btn hs-btn-text"
                                             type="text"
                                         >
-                                            {t("signup")}
+                                            {t('signup')}
                                         </Button>
                                     </Link>
                                 </Form.Item>

@@ -1,6 +1,6 @@
-import React from "react";
-import Navbar from "@components/navbar";
-import Footer from "@components/footer";
+import React from 'react';
+import Navbar from '@components/navbar';
+import Footer from '@components/footer';
 import {
     Button,
     Modal,
@@ -9,41 +9,47 @@ import {
     Input,
     notification,
     Descriptions,
-    Switch,
-} from "antd";
-import { useRouter } from "next/router";
+    Radio,
+} from 'antd';
+import { useRouter } from 'next/router';
 import {
     useCourseById,
     createChapter,
     createSubCourse,
-    useSubCourseById,
+    useSubCourseByIdAdmin,
     updateSubCourse,
-} from "@lib/service";
-import { useState } from "react";
-import dynamic from "next/dynamic";
-import CourseGroup from "@components/modal/courseGroup";
-import NewCourse from "@components/modal/newCourse";
-import Breadcrumb from "@components/molecule/breadcrumb";
-import LeftMenu from "@components/molecule/LeftMenu";
+    deleteSubCourse,
+    mutateSubCourseById,
+} from '@lib/service';
+import { useState, useRef, useEffect } from 'react';
+import dynamic from 'next/dynamic';
+import CourseGroup from '@components/modal/courseGroup';
+import NewCourse from '@components/modal/newCourse';
+import Breadcrumb from '@components/molecule/breadcrumb';
+import LeftMenu from '@components/molecule/LeftMenu';
+import { Editor } from '@tinymce/tinymce-react';
+import ReactMarkdown from 'react-markdown';
+import hljs from 'highlight.js';
+import { marked } from 'marked';
 
-const QuillNoSSRWrapper = dynamic(import("react-quill"), {
+const QuillNoSSRWrapper = dynamic(import('react-quill'), {
     ssr: false,
     loading: () => <p>Loading ...</p>,
 });
 
 const modules = {
     toolbar: [
-        [{ header: "1" }, { header: "2" }, { font: [] }],
+        [{ header: '1' }, { header: '2' }, { font: [] }],
         [{ size: [] }],
-        ["bold", "italic", "underline", "strike", "blockquote"],
+        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
         [
-            { list: "ordered" },
-            { list: "bullet" },
-            { indent: "-1" },
-            { indent: "+1" },
+            { list: 'ordered' },
+            { list: 'bullet' },
+            { indent: '-1' },
+            { indent: '+1' },
         ],
-        ["link", "image", "video", "code-block"],
-        ["clean"],
+        ['link', 'image', 'video', 'code-block'],
+        ['clean'],
     ],
     clipboard: {
         // toggle to add extra line breaks when pasting HTML:
@@ -54,7 +60,7 @@ const modules = {
 export default function Detail() {
     const router = useRouter();
     const id = +router.query.id;
-    console.log(router.query.subCourseId);
+
     const subCourseId = +router.query.subCourseId;
 
     const [editMode, setEditMode] = useState(false);
@@ -62,46 +68,125 @@ export default function Detail() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalOpenGroup, setIsModalOpenGroup] = useState(false);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [submissionModal, setSubmissionModal] = useState(false);
 
     const { data: course, loading: courseLoading } = useCourseById(id);
-    console.log("🚀 ~ file: [subCourseId].js:64 ~ Detail ~ course", course);
-    const { data: subCourse } = useSubCourseById(subCourseId);
-    console.log(
-        "🚀 ~ file: [subCourseId].js:66 ~ Detail ~ subCourse",
-        subCourse
+
+    const { data: subCourse } = useSubCourseByIdAdmin(subCourseId);
+
+    const [airdropAmount, setAirdropAmount] = useState(
+        subCourse?.data?.airdropAmount
     );
     const [title, setTitle] = useState(subCourse?.data?.subCourseName);
 
-    console.log("🚀 ~ file: [subCourseId].js:71 ~ Detail ~ title", title);
-
     const [desc, setDesc] = useState(subCourse?.data?.content);
+    const [submitType, setSubmitType] = useState(
+        subCourse?.data?.examValidation?.exam?.type
+    );
 
-    const [form] = Form.useForm();
+    const [submissionDesc, setSubmissionDesc] = useState(
+        subCourse?.data?.examValidation?.exam?.question
+    );
+
+    const markDown = subCourse?.data?.content;
+
+    useEffect(() => {
+        hljs.highlightAll();
+    }, [subCourse]);
 
     const openNotificationWithIcon = (type, data) => {
         notification[type]({
-            message: type === "success" ? "success" : "error",
+            message: type === 'success' ? 'success' : 'error',
             description: data,
         });
     };
 
     const save = async () => {
+        if (!title) {
+            openNotificationWithIcon('error', 'Please enter a title');
+            return;
+        }
+        if (!desc) {
+            openNotificationWithIcon('error', 'Please enter a title');
+            return;
+        }
         var object = {
             subCourseName: title,
             content: desc,
+            // examValidation: {
+            //     exam: {
+            //         type: submitType,
+            //         question: submissionDesc,
+            //     },
+            // },
+        };
+        console.log(object);
+        const { data, status } = await updateSubCourse(subCourseId, object);
+        if (status === 200) {
+            openNotificationWithIcon(
+                'success',
+                'Successfully updated sub course!'
+            );
+            mutateSubCourseById(subCourseId);
+            setEditMode(false);
+        } else {
+            openNotificationWithIcon(
+                'error',
+                data?.message || 'Failed to update sub course!'
+            );
+            // setLoading(false);
+        }
+    };
+
+    const saveValidation = async () => {
+        if (!submitType || !submissionDesc) {
+            openNotificationWithIcon(
+                'error',
+
+                'Failed to update sub course submission! Insert data'
+            );
+        }
+        var object = {
+            airdropAmount,
+            examValidation: {
+                exam: {
+                    type:
+                        submitType ||
+                        subCourse?.data?.examValidation?.exam?.type,
+                    question: submissionDesc,
+                },
+            },
         };
         const { data, status } = await updateSubCourse(subCourseId, object);
         if (status === 200) {
             openNotificationWithIcon(
-                "success",
-                "Successfully updated sub course!"
+                'success',
+                'Successfully updated sub course submission!'
             );
-
+            mutateSubCourseById(subCourseId);
             setEditMode(false);
         } else {
             openNotificationWithIcon(
-                "error",
-                data?.message || "Failed to update sub course!"
+                'error',
+                data?.message || 'Failed to update sub course submission!'
+            );
+            // setLoading(false);
+        }
+    };
+
+    const deleteSub = async () => {
+        const { data, status } = await deleteSubCourse(subCourseId);
+        if (status === 200) {
+            openNotificationWithIcon(
+                'success',
+                'Successfully deleted sub course!'
+            );
+            mutateSubCourseById(subCourseId);
+            setEditMode(false);
+        } else {
+            openNotificationWithIcon(
+                'error',
+                data?.message || 'Failed to delete sub course!'
             );
             // setLoading(false);
         }
@@ -109,7 +194,7 @@ export default function Detail() {
 
     const addContent = (value) => {
         console.log(
-            "🚀 ~ file: createCourse.js:79 ~ addContent ~ value",
+            '🚀 ~ file: createCourse.js:79 ~ addContent ~ value',
             value
         );
 
@@ -127,17 +212,21 @@ export default function Detail() {
             <div className="container mx-auto">
                 <Navbar />
             </div>
-            <div className="h-full ">
+            <div className="h-full overflow-y-auto">
                 <div className="h-full border-t border-trueGray-700 ">
                     <div className="h-full container mx-auto flex px-2">
                         {/* {course?.course?.courseName} */}
-                        <LeftMenu detail={course} />
-                        <div className="w-full p-8">
+                        <LeftMenu
+                            detail={course?.subCourses}
+                            course={course?.course}
+                            id={id}
+                        />
+                        <div className="w-full p-8 max-h-screen overflow-y-auto">
                             <Breadcrumb
                                 courseName={course?.course?.courseName}
                             />
 
-                            <div>
+                            <div className=" pb-3">
                                 {editMode ? (
                                     <input
                                         className="hs-input"
@@ -152,33 +241,43 @@ export default function Detail() {
                                         }
                                     />
                                 ) : (
-                                    <h2 className="max-w-2xl mt-3 text-3xl font-bold leading-snug tracking-tight text-gray-800 lg:leading-tight lg:text-4xl dark:text-white">
+                                    <h2 className="max-w-2xl mt-3 text-3xl font-bold leading-snug tracking-tight lg:leading-tight lg:text-4xl text-white">
                                         {subCourse?.data?.subCourseName}
                                     </h2>
                                 )}
                             </div>
-                            <div>
+                            <div className="max-h-screen overflow-y-auto pb-32">
                                 {editMode ? (
-                                    <QuillNoSSRWrapper
-                                        modules={modules}
-                                        theme="snow"
-                                        className="hs-editor mt-3"
+                                    <textarea
+                                        id="w3review"
+                                        className="hs-input w-full "
+                                        rows="300"
+                                        cols="50"
                                         value={desc || subCourse?.data?.content}
-                                        onChange={addContent}
+                                        onChange={(e) =>
+                                            setDesc(e.target.value)
+                                        }
                                     />
                                 ) : (
-                                    <p>{subCourse?.data?.content}</p>
+                                    markDown && (
+                                        <div
+                                            dangerouslySetInnerHTML={{
+                                                __html: marked(markDown),
+                                            }}
+                                            className="hs-markdown"
+                                        ></div>
+                                    )
                                 )}
                             </div>
                         </div>
                     </div>
                 </div>
-                <div className=" border-t border-trueGray-700 bottom-0 fixed w-full h-16 flex ">
+                <div className=" border-t bg-trueGray-900 border-trueGray-700 bottom-0 fixed w-full h-16 flex ">
                     <div className="container mx-auto flex  px-2">
                         <div className="justify-start flex">
                             <div className="flex w-80 border-r border-trueGray-700">
                                 <div className="my-auto flex space-x-4">
-                                    {" "}
+                                    {' '}
                                     <Button
                                         type="primary"
                                         className="hs-btn hs-btn-primary  "
@@ -221,7 +320,14 @@ export default function Detail() {
                                         className="hs-btn hs-btn-primary my-auto "
                                         onClick={() => setEditMode(true)}
                                     >
-                                        Edit{" "}
+                                        Edit{' '}
+                                    </Button>
+                                    <Button
+                                        type="default"
+                                        className="hs-btn hs-btn-white my-auto "
+                                        onClick={() => setSubmissionModal(true)}
+                                    >
+                                        Submission
                                     </Button>
                                     <Button
                                         type="default"
@@ -237,7 +343,7 @@ export default function Detail() {
                         </div>
                     </div>
                 </div>
-            </div>{" "}
+            </div>{' '}
             <CourseGroup
                 visible={isModalOpenGroup}
                 setVisible={() => setIsModalOpenGroup(false)}
@@ -250,6 +356,69 @@ export default function Detail() {
                 course={course}
                 id={id}
             />
+            <Modal
+                open={submissionModal}
+                onCancel={() => setSubmissionModal(false)}
+                footer={null}
+                className="hs-modal"
+            >
+                <Space className="w-full" direction="vertical" size={20}>
+                    <h4 className="text-center">Insert submission</h4>
+                    <Radio.Group
+                        defaultValue={
+                            submitType ||
+                            subCourse?.data?.examValidation?.exam?.type
+                        }
+                        buttonStyle="solid"
+                        className="justify-center flex"
+                        onChange={(e) => setSubmitType(e.target.value)}
+                    >
+                        <Radio.Button value="TEXT">Text</Radio.Button>
+                        <Radio.Button value="LINK">Link</Radio.Button>
+                        <Radio.Button value="IMAGE">Image</Radio.Button>
+                        <Radio.Button value="FILE">File</Radio.Button>
+                    </Radio.Group>
+                    <input
+                        className="hs-input w-full"
+                        type="text"
+                        placeholder="Оролтын тайлбар"
+                        value={
+                            submissionDesc ||
+                            subCourse?.data?.examValidation?.exam?.question
+                        }
+                        onChange={(e) => setSubmissionDesc(e.target.value)}
+                    />
+                    <input
+                        className="hs-input w-full"
+                        type="number"
+                        placeholder="Өгөх токены тоо"
+                        value={airdropAmount || subCourse?.data?.airdropAmount}
+                        onChange={(e) => setAirdropAmount(e.target.value)}
+                    />
+                    <Space
+                        className="w-full justify-end"
+                        direction="vertical"
+                        size={10}
+                    >
+                        <Button
+                            type="primary"
+                            className="hs-btn hs-btn-primary w-full"
+                            block
+                            onClick={() => saveValidation()}
+                        >
+                            Save
+                        </Button>
+                        <Button
+                            type="default"
+                            className="hs-btn hs-btn-default"
+                            block
+                            onClick={() => setSubmissionModal(false)}
+                        >
+                            Cancel
+                        </Button>
+                    </Space>
+                </Space>
+            </Modal>
             <Modal
                 open={deleteModalOpen}
                 onCancel={() => setDeleteModalOpen(false)}
@@ -279,6 +448,7 @@ export default function Detail() {
                         <Button
                             type="default"
                             className="hs-btn hs-btn-default"
+                            onClick={() => deleteSub()}
                             block
                         >
                             Delete

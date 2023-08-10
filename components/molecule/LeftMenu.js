@@ -9,20 +9,46 @@ import {
     Descriptions,
     Switch,
 } from "antd";
+import { useRouter } from "next/router";
+import Image from "next/image";
 
-export default function LeftMenu(detail) {
-    console.log("🚀 ~ file: LeftMenu.js:14 ~ LeftMenu ~ course", detail.detail);
+export default function LeftMenu({ detail, id, course }) {
+    const router = useRouter();
     return (
-        <div className="w-80 border-r shrink-0 border-trueGray-700 pb-8 pt-8">
-            <Space direction="vertical" size={30}>
-                {detail.detail?.course?.courseChapter?.map((item, index) => (
-                    <div key={index}>
-                        <h3>{item}</h3>
+        <div className="w-80 border-r shrink-0 border-trueGray-700 pb-8 pt-8 max-h-screen overflow-y-auto">
+            <Space direction="vertical" size={30} className="w-full mb-40">
+                <Image
+                    src={
+                        course?.courseThumbNailUrl ||
+                        "https://source.unsplash.com/random/300x300/?2"
+                    }
+                    height={160}
+                    width={368}
+                    alt="Cover"
+                    priority="true"
+                    className="object-cofver   w-full h-full rounded-t-2xl shadow-lg"
+                />
+                <a
+                    onClick={() => {
+                        router.push({
+                            pathname: "/builds/[id]",
+                            query: {
+                                id,
+                            },
+                        });
+                    }}
+                >
+                    <h3>Overview</h3>
+                </a>
+
+                {course?.courseChapter?.map((chapter) => (
+                    <div key={chapter}>
+                        <h3>{chapter}</h3>
 
                         <Space direction="vertical" size={4} className="pt-4">
-                            {detail.detail.subCourses.rows
-                                .filter((course) => course.chapter === item)
-                                .map((child) => (
+                            {typeof detail === "object" &&
+                                Array.isArray(detail[chapter]) &&
+                                detail[chapter].map((child) => (
                                     <a
                                         key={child.id}
                                         onClick={() => {

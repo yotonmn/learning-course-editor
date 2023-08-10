@@ -1,5 +1,5 @@
-import Link from "next/link";
-import { useRouter } from "next/router";
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import {
     Affix,
     Anchor,
@@ -12,15 +12,15 @@ import {
     Row,
     Space,
     Typography,
-} from "antd";
-import Hamburger from "@assets/svgs/menu.svg";
-import ChevronDown from "@assets/svgs/bx-chevron-down.svg";
-import Logo from "@assets/svgs/logo.svg";
-import { useSession } from "@lib/context";
-import { useTranslation } from "react-i18next";
-import UserCircle from "@assets/svgs/user-circle.svg";
-import Wallet from "@assets/svgs/wallet.svg";
-import LogOut from "@assets/svgs/log-out-circle.svg";
+} from 'antd';
+import Hamburger from '@assets/svgs/menu.svg';
+import ChevronDown from '@assets/svgs/bx-chevron-down.svg';
+import Logo from '@assets/svgs/logo.svg';
+import { useSession } from '@lib/context';
+import { useTranslation } from 'react-i18next';
+import UserCircle from '@assets/svgs/user-circle.svg';
+import Wallet from '@assets/svgs/wallet.svg';
+import LogOut from '@assets/svgs/log-out-circle.svg';
 
 export default function Navbar() {
     const { user, signOut, admin } = useSession();
@@ -30,15 +30,15 @@ export default function Navbar() {
 
     const handleSignOut = async (evt) => {
         await signOut();
-        router.push("/login");
+        router.push('/');
     };
     const pushToLogin = () => {
-        router.push("/login");
+        router.push('/');
     };
 
     const mobileMenu = [
         {
-            key: "/builds",
+            key: '/builds',
             label: (
                 <Link href="/builds" className="flex items-center">
                     Courses
@@ -46,7 +46,7 @@ export default function Navbar() {
             ),
         },
         {
-            key: "/liveSessions",
+            key: '/createCourse',
             label: (
                 <Link href="/createCourse" className="flex items-center">
                     Create course
@@ -54,7 +54,7 @@ export default function Navbar() {
             ),
         },
         {
-            key: "/dao",
+            key: '/dao',
             label: (
                 <Link href="/dao" className="flex items-center">
                     Docs
@@ -63,37 +63,53 @@ export default function Navbar() {
         },
 
         !user && {
-            key: "/login",
+            key: '/',
             label: (
                 <Link href="/login" className="flex items-center">
-                    {t("login")}
+                    {t('login')}
                 </Link>
             ),
         },
     ];
 
     const profileMenu = [
+        // {
+        //     key: "/profile",
+        //     // icon: <UserCircle />,
+        //     label: <Link href="/profile">{t("Profile")}</Link>,
+        // },
+        // {
+        //     key: "/profile/wallet",
+        //     // icon: <Wallet />,
+        //     label: <Link href="/editProfile">Edit profile</Link>,
+        // },
         {
-            key: "/profile",
-            // icon: <UserCircle />,
-            label: <Link href="/profile">{t("Profile")}</Link>,
-        },
-        {
-            key: "/profile/wallet",
-            // icon: <Wallet />,
-            label: <Link href="/editProfile">Edit profile</Link>,
-        },
-        {
-            key: "/liveSessions",
+            key: '/createCourse',
             label: (
                 <Link href="/createCourse" className="flex items-center">
-                    Create course
+                    Create Course
                 </Link>
             ),
         },
         {
-            key: "logout",
-            label: t("logout"),
+            key: '/createProduct',
+            label: (
+                <Link href="/createProduct" className="flex items-center">
+                    Create Product
+                </Link>
+            ),
+        },
+        {
+            key: '/createProduct',
+            label: (
+                <Link href="/updateProduct" className="flex items-center">
+                    Update product
+                </Link>
+            ),
+        },
+        {
+            key: 'logout',
+            label: t('logout'),
             // icon: <LogOut />,
             onClick: handleSignOut,
         },
@@ -113,48 +129,15 @@ export default function Navbar() {
                             className="flex justify-center align-middle"
                         >
                             <img
-                                src="/img/logo.svg"
+                                src="/monk.png"
                                 alt="N"
                                 width="32"
                                 height="32"
-                                className="w-8 align-middle"
+                                className="w-8 align-middle rounded-full"
                             />
-                            <h3 className="pl-2 align-middle my-auto">
-                                build.mn
-                            </h3>
+                            <h3 className="pl-2 align-middle">monk.mn</h3>
                         </Link>
                     </div>
-
-                    {/* <div className="hs-nav-center hidden md:block">
-                        <ul className="flex items-center gap-6 text-sm">
-                            <li>
-                                <Link
-                                    className="text-gray-500 transition hover:text-gray-500/75 dark:text-white dark:hover:text-white/75 text-lg "
-                                    href="/builds"
-                                >
-                                    Builds
-                                </Link>
-                            </li>
-
-                            <li>
-                                <Link
-                                    className="text-gray-500 transition hover:text-gray-500/75 dark:text-white dark:hover:text-white/75 text-lg"
-                                    href="/createCourse"
-                                >
-                                    Create course
-                                </Link>
-                            </li>
-
-                            <li>
-                                <Link
-                                    className="text-gray-500 transition hover:text-gray-500/75 dark:text-white dark:hover:text-white/75 text-lg"
-                                    href="/"
-                                >
-                                    Docs
-                                </Link>
-                            </li>
-                        </ul>
-                    </div> */}
 
                     <div className="flex items-center justify-end">
                         {/* <Button
@@ -185,7 +168,7 @@ export default function Navbar() {
                                         src={
                                             user?.picture
                                                 ? user.picture
-                                                : "https://source.boringavatars.com/"
+                                                : 'https://source.boringavatars.com/'
                                         }
                                     />
                                     <ChevronDown />
@@ -198,7 +181,7 @@ export default function Navbar() {
                                         className="hs-btn hs-btn-primary"
                                         type="primary"
                                     >
-                                        {t("login")}
+                                        {t('login')}
                                     </Button>
                                 </Link>
                             </div>

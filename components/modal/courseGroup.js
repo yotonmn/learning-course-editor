@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
     Button,
     Modal,
@@ -6,25 +6,31 @@ import {
     Form,
     Input,
     notification,
-    Descriptions,
+    Radio,
     Switch,
-} from "antd";
-import { useState } from "react";
+} from 'antd';
+import { useState } from 'react';
 import {
     useCourseById,
     createChapter,
     createSubCourse,
-    useSubCourseById,
-    updateSubCourse,
-} from "@lib/service";
+    updateChapter,
+    deleteChapter,
+    mutateCourseById,
+} from '@lib/service';
 
 export default function CourseGroup({ visible, setVisible, course, id }) {
     const [deleteMode, setDeleteMode] = useState(false);
+    const [submitType, setSubmitType] = useState('');
+    const [createdoOrder, setCreatedOrder] = useState([]);
+    const [currentChapter, setCurrentChapter] = useState('');
+
+    const [order, setOrder] = useState(1);
+    console.log('🚀 ~ file: courseGroup.js:29 ~ CourseGroup ~ order:', order);
 
     const [form] = Form.useForm();
 
     const onChange = (checked) => {
-        console.log(`switch to ${checked}`);
         setDeleteMode(checked);
     };
 
@@ -38,45 +44,111 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
 
         if (status === 200) {
             openNotificationWithIcon(
-                "success",
-                "Successfully created chapter!"
+                'success',
+                'Successfully created chapter!'
             );
+            mutateCourseById(id);
             form.resetFields();
         } else {
             openNotificationWithIcon(
-                "error",
-                data?.error || "Failed to create course!"
+                'error',
+                data?.error || 'Failed to create course!'
             );
             // setLoading(false);
         }
     };
 
     const onFinishDelete = async (values) => {
-        console.log(values);
-        // var object = {
-        //     chapterName: values.title,
-        // };
+        var object = {
+            chapterName: values.chapterName,
+        };
+        console.log('-----', object);
 
-        const { data, status } = await createChapter(id, values);
+        const { data, status } = await deleteChapter(id, object);
 
         if (status === 200) {
             openNotificationWithIcon(
-                "success",
-                "Successfully created chapter!"
+                'success',
+                'Successfully deleted chapter!'
             );
             form.resetFields();
+            mutateCourseById(id);
         } else {
             openNotificationWithIcon(
-                "error",
-                data?.error || "Failed to create course!"
+                'error',
+                data?.error || 'Failed to create course!'
             );
             // setLoading(false);
         }
     };
 
+    const onFinishUpdate = async (values) => {
+        console.log('-----', values);
+        var object;
+        if (!values.chapterName && !order) {
+            openNotificationWithIcon('error', 'Failed to update chapter!');
+            return;
+        }
+        if (values.chapterName === undefined) {
+            object = {
+                chapterName: values.chapter,
+                order: order,
+            };
+        } else if (order === undefined) {
+            object = {
+                chapterName: values.chapter,
+                newChapterName: values.chapterName,
+            };
+        } else {
+            object = {
+                chapterName: values.chapter,
+                newChapterName: values.chapterName,
+                order: order,
+            };
+        }
+        console.log(object);
+
+        const { data, status } = await updateChapter(id, object);
+
+        if (status === 200) {
+            openNotificationWithIcon(
+                'success',
+                'Successfully updated chapter!'
+            );
+            form.resetFields();
+            mutateCourseById(id);
+        } else {
+            openNotificationWithIcon(
+                'error',
+                data?.error || 'Failed to update course!'
+            );
+            // setLoading(false);
+        }
+    };
+
+    const getOrder = (e) => {
+        console.log(course);
+
+        const arr = course?.course?.courseChapter;
+        const currentChapter = Object.values(arr)
+            .flat()
+            .filter((subCourse) => subCourse === e.target.value);
+        setCurrentChapter(currentChapter);
+
+        const length = arr.length;
+        var order = [];
+        for (let i = 1; i <= length; i++) {
+            order.push(i);
+        }
+        console.log(order);
+        setCreatedOrder(order);
+
+        // const chosenChapter = chapters[e.target.value];
+    };
+
     const openNotificationWithIcon = (type, data) => {
         notification[type]({
-            message: type === "success" ? "success" : "error",
+            message: type === 'success' ? 'success' : 'error',
             description: data,
         });
     };
@@ -91,11 +163,19 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
             >
                 <Space className="w-full" direction="vertical" size={16}>
                     <h5>Шинэ бүлэг</h5>
-                    <Space>
-                        <Switch onChange={onChange} className="bg-gray-400" />
-                        <h5 className="text-white">Бүлэг устгах </h5>
+                    <Space className="justify-center flex">
+                        <Radio.Group
+                            defaultValue={submitType}
+                            buttonStyle="solid"
+                            className="justify-center flex"
+                            onChange={(e) => setSubmitType(e.target.value)}
+                        >
+                            <Radio.Button value="insert">Үүсгэх</Radio.Button>
+                            <Radio.Button value="update">Шинэчлэх</Radio.Button>
+                            <Radio.Button value="delete">Устгах</Radio.Button>
+                        </Radio.Group>
                     </Space>
-                    {deleteMode ? (
+                    {submitType == 'delete' && (
                         <Form
                             className="hs-row"
                             form={form}
@@ -109,15 +189,15 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
                                 direction="vertical"
                                 size={16}
                             >
-                                {" "}
+                                {' '}
                                 <h5>Устгах бүлэг сонгох</h5>
                                 <Form.Item
-                                    name="chapter"
+                                    name="chapterName"
                                     className="hs-form-item"
                                     rules={[
                                         {
                                             required: true,
-                                            message: "Enter Chapter",
+                                            message: 'Enter Chapter',
                                         },
                                     ]}
                                     required
@@ -127,8 +207,8 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
                                         className=" hs-input-custom w-full px-4"
                                     >
                                         <option value="⬇️ Select a chapters ⬇️">
-                                            {" "}
-                                            -- Select a chapter --{" "}
+                                            {' '}
+                                            -- Select a chapter --{' '}
                                         </option>
                                         {course?.course?.courseChapter?.map(
                                             (item, index) => (
@@ -168,10 +248,123 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
                                     >
                                         Delete
                                     </Button>
-                                </Form.Item>{" "}
+                                </Form.Item>{' '}
                             </Space>
                         </Form>
-                    ) : (
+                    )}
+                    {submitType == 'update' && (
+                        <Form
+                            className="hs-row"
+                            form={form}
+                            layout="vertical"
+                            requiredMark={true}
+                            onFinish={onFinishUpdate}
+                            autoComplete="off"
+                        >
+                            <Space
+                                className="w-full"
+                                direction="vertical"
+                                size={16}
+                            >
+                                {' '}
+                                <h5>Шинэчлэх бүлэг сонгох</h5>
+                                <Form.Item
+                                    name="chapter"
+                                    className="hs-form-item"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Enter Chapter',
+                                        },
+                                    ]}
+                                    required
+                                >
+                                    <select
+                                        placeholder="select"
+                                        className=" hs-input-custom w-full px-4"
+                                        onChange={(e) => getOrder(e)}
+                                    >
+                                        <option value="⬇️ Select a chapters ⬇️">
+                                            {' '}
+                                            -- Select a chapter --{' '}
+                                        </option>
+                                        {course?.course?.courseChapter?.map(
+                                            (item, index) => (
+                                                <option
+                                                    key={index}
+                                                    value={item}
+                                                >
+                                                    {item}
+                                                </option>
+                                            )
+                                        )}
+                                    </select>
+                                </Form.Item>
+                                {createdoOrder.length != 0 && (
+                                    <Form.Item
+                                        name="order"
+                                        className="hs-form-item"
+                                        rules={[
+                                            {
+                                                message: 'Enter Order',
+                                            },
+                                        ]}
+                                        required
+                                    >
+                                        <p className="text-white">Дараалал</p>
+                                        <select
+                                            placeholder="select"
+                                            className=" hs-input-custom w-full px-4"
+                                            onChange={(e) =>
+                                                setOrder(e.target.value)
+                                            }
+                                            value={order}
+                                        >
+                                            {createdoOrder.map(
+                                                (item, index) => (
+                                                    <option
+                                                        key={index}
+                                                        value={item}
+                                                    >
+                                                        {item}
+                                                    </option>
+                                                )
+                                            )}
+                                        </select>
+                                    </Form.Item>
+                                )}
+                                {createdoOrder.length != 0 && (
+                                    <Form.Item
+                                        name="chapterName"
+                                        className="hs-form-item"
+                                        rules={[
+                                            {
+                                                message: 'Enter Title',
+                                            },
+                                        ]}
+                                    >
+                                        <Input
+                                            className="hs-input"
+                                            type="text"
+                                            autoComplete="off"
+                                            placeholder="Updated chapter name"
+                                        />
+                                    </Form.Item>
+                                )}
+                                <Form.Item className="hs-form-item">
+                                    <Button
+                                        type="default"
+                                        className="hs-btn hs-btn-default"
+                                        htmlType="submit"
+                                        block
+                                    >
+                                        Update
+                                    </Button>
+                                </Form.Item>{' '}
+                            </Space>
+                        </Form>
+                    )}
+                    {submitType == 'insert' && (
                         <Form
                             className="hs-row"
                             form={form}
@@ -191,7 +384,7 @@ export default function CourseGroup({ visible, setVisible, course, id }) {
                                     rules={[
                                         {
                                             required: true,
-                                            message: "Enter Title",
+                                            message: 'Enter Title',
                                         },
                                     ]}
                                     required

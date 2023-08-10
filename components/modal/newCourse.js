@@ -15,18 +15,25 @@ import {
     createSubCourse,
     useSubCourseById,
     updateSubCourse,
+    mutateCourseById,
 } from "@lib/service";
+import { useState } from "react";
 
 export default function NewCourse({ visible, setVisible, course, id }) {
     const [form] = Form.useForm();
+    const [chosenArray, setChosenArray] = useState([]);
+
+    const [order, setOrder] = useState(chosenArray.length + 1);
 
     const onFinish = async (values) => {
         var object = {
             chapter: values.chapter,
             subCourseName: values.subCourseName,
             courseId: id,
+            order: order,
         };
-        // setSubLessons([...subLessons, values]);
+        console.log(object);
+
         const { data, status } = await createSubCourse(object);
         console.log("🚀 ~ file: [id].js:73 ~ onFinishGroup ~ status", status);
         console.log("🚀 ~ file: [id].js:73 ~ onFinishGroup ~ data", data);
@@ -36,6 +43,7 @@ export default function NewCourse({ visible, setVisible, course, id }) {
                 "Successfully created sub course!"
             );
             form.resetFields();
+            mutateCourseById(id);
         } else {
             openNotificationWithIcon(
                 "error",
@@ -43,6 +51,16 @@ export default function NewCourse({ visible, setVisible, course, id }) {
             );
             // setLoading(false);
         }
+    };
+    const getOrder = (e) => {
+        const arr = course?.subCourses;
+        const chapters = Object.values(arr)
+            .flat()
+            .filter((subCourse) => subCourse.chapter === e.target.value);
+
+        setChosenArray(chapters);
+
+        // const chosenChapter = chapters[e.target.value];
     };
 
     const openNotificationWithIcon = (type, data) => {
@@ -107,6 +125,7 @@ export default function NewCourse({ visible, setVisible, course, id }) {
                                 <select
                                     placeholder="select"
                                     className=" hs-input-custom w-full px-4"
+                                    onChange={(e) => getOrder(e)}
                                 >
                                     <option value="⬇️ Select a chapters ⬇️">
                                         {" "}
@@ -120,6 +139,7 @@ export default function NewCourse({ visible, setVisible, course, id }) {
                                         )
                                     )}
                                 </select>
+
                                 {/* <Select
                                 placeholder="Select group"
                                 className="hs-modal"
@@ -138,6 +158,38 @@ export default function NewCourse({ visible, setVisible, course, id }) {
                                 )}
                             </Select> */}
                             </Form.Item>
+                            {chosenArray.length != 0 && (
+                                // <Form.Item
+                                //     name="order"
+                                //     className="hs-form-item"
+                                //     rules={[
+                                //         {
+                                //             required: true,
+                                //             message: "Enter Order",
+                                //         },
+                                //     ]}
+                                //     required
+                                // >
+                                <select
+                                    placeholder="select"
+                                    className=" hs-input-custom w-full px-4"
+                                    onChange={(e) => setOrder(e.target.value)}
+                                    value={order}
+                                >
+                                    <option value={chosenArray.length + 1}>
+                                        Хамгийн сүүлд харуулах
+                                    </option>
+                                    {chosenArray.map((item, index) => (
+                                        <option
+                                            key={index.order}
+                                            value={item.order}
+                                        >
+                                            {item.order}
+                                        </option>
+                                    ))}
+                                </select>
+                                // </Form.Item>
+                            )}
                             <Form.Item className="hs-form-item">
                                 <Button
                                     type="primary"
