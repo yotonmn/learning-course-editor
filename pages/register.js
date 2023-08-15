@@ -1,25 +1,24 @@
-import React from "react";
-import Navbar from "@components/navbar";
-import Footer from "@components/footer";
-import {
-    Button,
-    Form,
-    notification,
-    Space,
-    Typography,
-    Input,
-    Divider,
-} from "antd";
 import FacebookButton from "@components/common/FacebookButton";
 import GoogleButton from "@components/common/GoogleButton";
+import Footer from "@components/footer";
+import Navbar from "@components/navbar";
+import {
+    Button,
+    Divider,
+    Form,
+    Input,
+    Space,
+    Typography,
+    notification,
+} from "antd";
 
+import { useSession } from "@lib/context";
 import { login, register } from "@lib/service";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { useSession } from "@lib/context";
-import { useTranslation } from "react-i18next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 const GOOGLE_CLIENT_ID =
     process.env.GOOGLE_CLIENT_ID ||
@@ -39,6 +38,7 @@ export default function Register() {
 
     const onFinish = async (values) => {
         const { data, status } = await register(values);
+
         if (status === 200) {
             const { email, password } = values;
             const { data, status } = await login({ email, password });
